@@ -13,7 +13,7 @@ class ServerContextTest {
     public void testSessionBind(){
         UserSession userSession = new ContextUserSession();
         ServerContext serverContext = new ServerContext();
-        serverContext.bindSession(userSession);
+        serverContext.bindSession(userSession).bindSession(userSession);
         assertTrue(serverContext.isStateFul());
         assertFalse(serverContext.isFileCached());
         UserSession userSession1 = serverContext.getUserSession();
