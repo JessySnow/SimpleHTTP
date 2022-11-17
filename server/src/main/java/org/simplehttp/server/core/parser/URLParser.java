@@ -14,21 +14,21 @@ import java.net.URL;
 public class URLParser {
     /**
      * @param server 服务器引用，构造 URL
-     * @param urlQuery 完整的请求 URL 路径 eg: /context/api_1?user_id=1
+     * @param urlStr 完整的请求 URL 路径
      */
-    public URLWrapper parse(SimpleHttpServer server, String urlQuery) throws RuntimeException{
-        checkURLPath(server, urlQuery);
-        String fullUrl = server.protocol + "://" + server.getHostAlias() + ":" + server.getPort() + urlQuery;
+    public URLWrapper parse(SimpleHttpServer server, String urlStr) throws RuntimeException{
         try {
-            return new URLWrapper(new URL(fullUrl));
+            URL url = new URL(urlStr);
+            checkPath(server, url);
+            return new URLWrapper(url);
         } catch (MalformedURLException e) {
             throw new RuntimeException("Bad Url");
         }
     }
 
-    private void checkURLPath(SimpleHttpServer server, String urlPath) throws RuntimeException{
-        if(!urlPath.startsWith(server.getContextPath())){
-            throw new RuntimeException("未知路径");
+    private void checkPath(SimpleHttpServer server, URL url){
+        if(!url.getPath().startsWith(server.getContextPath())){
+            throw new RuntimeException("不支持的请求路径");
         }
     }
 }

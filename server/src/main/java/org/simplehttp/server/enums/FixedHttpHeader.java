@@ -7,6 +7,7 @@ public enum FixedHttpHeader {
     SERVER("Server"),
     SET_COOKIE("Set-Cookie"),
     CONTENT_TYPE("Content_Type"),
+    CONTENT_LENGTH("Content-Length"),
     CONTENT_ENCODING("Content_Encoding");
 
     public final String key;

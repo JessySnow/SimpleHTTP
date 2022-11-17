@@ -9,7 +9,8 @@ public enum MIME {
     IMAGE_PNG("image/png"),
     AUDIO_MPEG("audio/mpeg"),
     VIDEO_MP4("video/mp4"),
-    TEXT_HTML("text/html");
+    TEXT_HTML("text/html"),
+    BINARY("application/octet-stream");
 
     public String value;
     MIME(String value){

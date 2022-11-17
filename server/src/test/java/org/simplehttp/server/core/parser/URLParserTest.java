@@ -25,7 +25,7 @@ class URLParserTest {
 
     @Test
     public void testURL() throws MalformedURLException {
-        URL url = new URL("http://mail.google.com:80/context/index.jsp?mailid=10001&userid=1234");
+        URL url = new URL("http://127.0.0.1:8080/context/api?id=1");
         System.out.printf("Protocol: %s\n", url.getProtocol());
         System.out.printf("Host: %s\n", url.getHost());
         System.out.printf("Path: %s\n", url.getPath());
@@ -36,13 +36,13 @@ class URLParserTest {
 
     @Test
     public void testParseBadContext(){
-        assertThrows(RuntimeException.class, () -> new URLParser().parse(simpleHttpServer, "/context/index.jsp?mailid=10001&userid=1234"));
+        assertThrows(RuntimeException.class, () -> new URLParser().parse(simpleHttpServer, "http://127.0.0.1:8080/context/api?id=1"));
     }
 
     @Test
     public void testParseURL(){
         simpleHttpServer.setContextPath("/context");
-        URLWrapper parse = new URLParser().parse(simpleHttpServer, "/context/index.jsp?mailid=10001&userid=1234");
+        URLWrapper parse = new URLParser().parse(simpleHttpServer, "http://127.0.0.1:8080/context/api?id=1");
         assertNotNull(parse);
     }
 
