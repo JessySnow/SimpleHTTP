@@ -1,5 +1,7 @@
 package org.simplehttp.server.pojo.protocol;
 
+import lombok.Data;
+
 import java.util.HashMap;
 
 /**

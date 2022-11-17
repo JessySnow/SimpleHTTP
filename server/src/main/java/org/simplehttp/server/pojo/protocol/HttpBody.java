@@ -1,5 +1,6 @@
 package org.simplehttp.server.pojo.protocol;
 
+import lombok.Data;
 import org.simplehttp.server.enums.MIME;
 
 import java.util.HashMap;
@@ -11,21 +12,29 @@ import java.util.HashMap;
 public class HttpBody {
     private final HashMap<String, BodyValueEntry> body = new HashMap<>();
 
-    public void addBodyPair(String key, byte[] content, MIME mimeType){
+    public void addBodyValueEntry(String key, byte[] content, MIME mimeType){
         if(key == null || key.isEmpty()){
-            throw new IllegalArgumentException("不允许的请求体键");
+            throw new IllegalArgumentException("不允许的");
         }
         BodyValueEntry bodyValueEntry = new BodyValueEntry(content, mimeType);
         body.put(key, bodyValueEntry);
     }
 
-    public void addBodyPair(String key, BodyValueEntry entry){
+    public void addBodyValueEntry(String key, BodyValueEntry entry){
         if(key == null || key.isEmpty()){
-            throw new IllegalArgumentException("不允许的请求体键");
+            throw new IllegalArgumentException("不允许的");
+        }
+        if(null == entry.getMimeType()){
+            throw new IllegalArgumentException("不允许的");
         }
         body.put(key, entry);
     }
 
+    public BodyValueEntry getBodyValueEntry(String key){
+        return body.get(key);
+    }
+
+    @Data
     public static class BodyValueEntry{
         private byte[] content;
         private MIME mimeType;
@@ -34,23 +43,6 @@ public class HttpBody {
 
         BodyValueEntry(byte[] content, MIME mimeType){
             this.content = content;
-            this.mimeType = mimeType;
-        }
-
-        public byte[] getContent() {
-            return content;
-        }
-
-
-        public MIME getMimeType() {
-            return mimeType;
-        }
-
-        public void setContent(byte[] content) {
-            this.content = content;
-        }
-
-        public void setMimeType(MIME mimeType) {
             this.mimeType = mimeType;
         }
     }
