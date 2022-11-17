@@ -7,6 +7,7 @@ import org.simplehttp.server.core.context.ServerContext;
 import org.simplehttp.server.pojo.protocol.HttpRequest;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -14,6 +15,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class HttpRequestParserTest {
     private ServerContext context;
     private ByteArrayInputStream getHeaderStream;
+    private ByteArrayInputStream postHeaderStream_plain_text;
 
 
     @BeforeEach
@@ -29,11 +31,22 @@ class HttpRequestParserTest {
                         "User-Agent:Fiddler Everywhere\n" +
                         "Host:127.0.0.1:7890\r\n")
                 .getBytes());
+        postHeaderStream_plain_text = new ByteArrayInputStream(("POST http://127.0.0.1:7890/api/index.jsp HTTP/1.1\n" +
+                "User-Agent:Fiddler Everywhere\n" +
+                "Host:127.0.0.1:7890\n" +
+                "Content-Type:text/plain\n" +
+                "Content-Length:0\n" +
+                "\n" +
+                "This is a plain text test.").getBytes());
     }
 
     @Test
-    public void testParse() throws IOException {
-        HttpRequest parse = new HttpRequestParser().parse(context, getHeaderStream);
-        System.out.println("Success");
+    public void testParseGet() throws IOException {
+        HttpRequest request = new HttpRequestParser().parse(context, getHeaderStream);
+    }
+
+    @Test
+    public void testParsePost() throws IOException{
+        HttpRequest request = new HttpRequestParser().parse(context, postHeaderStream_plain_text);
     }
 }
