@@ -9,12 +9,8 @@ import org.simplehttp.server.pojo.protocol.HttpHeader;
 import org.simplehttp.server.pojo.protocol.HttpRequest;
 import org.simplehttp.server.pojo.protocol.URLWrapper;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
 import java.util.Optional;
 
 public class HttpRequestParser {
@@ -22,7 +18,8 @@ public class HttpRequestParser {
         HttpRequest request = new HttpRequest();
         HttpHeader header = new HttpHeader();
         HttpBody body = null;
-        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.US_ASCII));
+        // 对于 头部 和 Body 统一使用 UTF-8 编码进行读取
+        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
 
         String line;
         int count = 0;
@@ -82,30 +79,26 @@ public class HttpRequestParser {
             }
 
             // 解析工作
-            // TODO 解析其他的类型
             switch (acceptableType){
                 case TEXT_PLAIN, TEXT_HTML -> {
                     HttpBody.BodyValueEntry entry = new HttpBody.BodyValueEntry();
                     entry.setMimeType(MIME.TEXT_PLAIN);
 
-                    // 如果请求头有包含了长度信息，则使用这个长度信息来初始化 content，否则需要使用 List 进行转储
-                    // fixme 这里 input stream 已经被消费完了，不能用来读取了
+                    // 如果请求头有包含了长度信息，则使用这个长度信息来初始化 content，否则需要使用 ByteArrayOutputStream 进行转储
                     if(contentLength != -1){
                         byte[] content = new byte[contentLength];
                         inputStream.read(content);
                         entry.setContent(content);
-                        body.addBodyValueEntry(MIME.TEXT_PLAIN.value, entry);
-                        String str;
                     }
                     else {
-                        ArrayList<Byte> temp = new ArrayList<>();
+                        ByteArrayOutputStream cache = new ByteArrayOutputStream();
                         byte byt;
                         while ((byt = (byte) inputStream.read()) != -1) {
-                            temp.add(byt);
+                            cache.write(byt);
                         }
-                        entry.setContent(temp.toArray(new Byte[0]));
-                        body.addBodyValueEntry(MIME.TEXT_PLAIN.value, entry);
+                        entry.setContent(cache.toByteArray());
                     }
+                    body.addBodyValueEntry(MIME.TEXT_PLAIN.value, entry);
                 }
             }
         }

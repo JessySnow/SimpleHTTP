@@ -6,9 +6,8 @@ import org.simplehttp.server.core.SimpleHttpServer;
 import org.simplehttp.server.core.context.ServerContext;
 import org.simplehttp.server.pojo.protocol.HttpRequest;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -48,5 +47,24 @@ class HttpRequestParserTest {
     @Test
     public void testParsePost() throws IOException{
         HttpRequest request = new HttpRequestParser().parse(context, postHeaderStream_plain_text);
+    }
+
+    /**
+     * ASCII Reader 测试
+     * @throws IOException
+     */
+    @Test
+    public void testReaderFormat() throws IOException {
+        byte[] bytes = "你好，世界！".getBytes(StandardCharsets.UTF_8);
+        ByteArrayInputStream in = new ByteArrayInputStream(bytes);
+        ByteArrayOutputStream cache = new ByteArrayOutputStream();
+        BufferedReader reader = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
+        String line;
+        while ((line = reader.readLine()) != null){
+            cache.write(line.getBytes());
+        }
+
+        byte[] bs = cache.toByteArray();
+        assertArrayEquals(bs, bytes);
     }
 }
