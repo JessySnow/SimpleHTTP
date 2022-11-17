@@ -7,7 +7,7 @@ import org.simplehttp.server.core.session.impl.ContextUserSession;
 import java.util.HashMap;
 
 /**
- * 服务器上下文，提供 Session 管理、线程分派、文件缓存 的功能
+ * 服务器上下文，提供 Session 管理、线程分派、文件存取 的功能
  * 通过继承 Context 来自定义其他的功能，并绑定到 SimpleHttpServer 对象上
  * 默认组件:
  * 可选组件：
