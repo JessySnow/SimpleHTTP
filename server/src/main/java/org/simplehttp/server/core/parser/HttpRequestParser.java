@@ -172,30 +172,35 @@ public class HttpRequestParser {
         temp.delete(0,temp.length());
 
 
-        //TODO 处理 Body，由于使用了 UTF-8 编码不能直接使用 read 去读取，转换会溢出
-//        if(body != null){
-//            // 如果不能解析头部的媒体类型，使用默认的二进制类型进行处理
-//            String mimeType = Optional
-//                    .ofNullable(request
-//                            .getHeader()
-//                            .getHeaderValue(FixedHttpHeader.CONTENT_TYPE.key))
-//                    .orElse(MIME.BINARY.value);
-//            MIME acceptableType = null;
-//            try {
-//                acceptableType = Enum.valueOf(MIME.class, mimeType.replace("/","_").toUpperCase());
-//            }catch (RuntimeException e){
-//                throw new RuntimeException("无法接受的媒体类型");
-//            }
-//
-//            switch (acceptableType){
-//                // 纯文本信息，全部读取以 String 类型存放到 body 中，key 字段设为 plain/text，编码默认使用 UTF-8
-//                case TEXT_HTML, TEXT_PLAIN -> {
-//                    while ((cur = (byte) inputStream.read()) != -1){
-//
-//                    }
-//                }
-//            }
-//        }
+
+        if(body != null){
+            // 如果不能解析头部的媒体类型，使用默认的二进制类型进行处理
+            String mimeType = Optional
+                    .ofNullable(request
+                            .getHeader()
+                            .getHeaderValue(FixedHttpHeader.CONTENT_TYPE.key))
+                    .orElse(MIME.BINARY.value);
+            MIME acceptableType = null;
+            try {
+                acceptableType = Enum.valueOf(MIME.class, mimeType.replace("/","_").toUpperCase());
+            }catch (RuntimeException e){
+                throw new RuntimeException("无法接受的媒体类型");
+            }
+
+            // 字符类型统一用 UTF-8 编码读取 TODO 支持其他的编码方式
+            switch (acceptableType){
+                // 如果提交的是一个纯文本信息，说明在协议层面不存在键值对关系，直接将文本读取到 String 中，BodyEntry 的键设置成媒体类型
+                // 如果需要文本信息中的键值对关系，需要在 Handler 中自己进行处理
+                case TEXT_HTML, TEXT_PLAIN -> {
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream,StandardCharsets.UTF_8));
+                    String line;
+                    while ((line = reader.readLine()) != null){
+                        temp.append(line);
+                    }
+                    body.addBodyValueEntry(acceptableType.value, temp.toString(), MIME.TEXT_PLAIN);
+                }
+            }
+        }
         request.setBody(body);
 
         return request;

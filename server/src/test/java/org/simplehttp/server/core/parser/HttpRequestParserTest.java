@@ -44,18 +44,12 @@ class HttpRequestParserTest {
         HttpRequest request = new HttpRequestParser().parse(context, getHeaderStream);
     }
 
+    /**
+     * POST 请求测试
+     * 媒体类型：纯文本
+     */
     @Test
     public void testParsePost() throws IOException{
         HttpRequest request = new HttpRequestParser().parse(context, postHeaderStream_plain_text);
-    }
-
-    /**
-     * ASCII Reader 测试
-     * @throws IOException
-     */
-    @Test
-    public void testReaderFormat() throws IOException {
-        byte[] bytes = "你好，世界！".getBytes(StandardCharsets.UTF_8);
-        ByteArrayInputStream in = new ByteArrayInputStream(bytes);
     }
 }
