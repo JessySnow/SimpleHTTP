@@ -19,6 +19,7 @@ import java.util.HashMap;
  * 2. 请求路由
  */
 public abstract class AbstractServerContext {
+    // 绑定的服务器实例引用
     public SimpleHttpServer server = null;
 
     // 请求暂存
@@ -36,14 +37,20 @@ public abstract class AbstractServerContext {
     // URL 解析器
     @Getter
     @Setter
-//    @Accessors(chain = true)
+    @Accessors(chain = true)
     protected URLParser urlParser;
 
+
+    // 将当前工作线程的请求实体引用放置到上下文中
     public void putRequest(HttpRequest request){
         this.httpRequestThreadLocal.set(request);
     }
-
+    // 从上下文获取当前工作线程的请求实体引用
     public HttpRequest getRequest(){
         return httpRequestThreadLocal.get();
+    }
+
+    public void bindServer(SimpleHttpServer server){
+        this.server = server;
     }
 }

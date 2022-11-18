@@ -21,7 +21,7 @@ class HttpRequestParserTest {
     public void setUp(){
         this.context = new ServerContext();
         context.setUrlParser(new URLParser());
-        context.server = new SimpleHttpServer().setServerContext(context)
+        context.server = new SimpleHttpServer().bindContext(context)
                 .setPort(9090)
                 .setContextPath("/api")
                 .setHostAlias("localhost");
