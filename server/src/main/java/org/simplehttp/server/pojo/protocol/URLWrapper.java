@@ -1,10 +1,13 @@
 package org.simplehttp.server.pojo.protocol;
 
+import lombok.Getter;
+
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 
 public class URLWrapper {
+    @Getter
     private URL url;
     private HashMap<String, String> parameterMap;
 

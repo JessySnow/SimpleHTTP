@@ -8,12 +8,18 @@ import java.net.URL;
 import static org.junit.jupiter.api.Assertions.*;
 
 class URLWrapperTest {
-    String url = "http://mail.google.com:80/context/?mailid=10001&userid=1234";
+    String url = "http://mail.google.com:80/context?mailid=10001&userid=1234";
     String bad_url_1 = "http://mail.google.com:80/context/?mailid=10001userid=1234";
     String bad_url_2 = "http://mail.google.com:80/context/?mailid=10001&&userid=1234";
     String bad_url_3 = "http://mail.google.com:80/context/?mailid=10001&userid1234";
     String bad_url_unencoding = "http://mail.google.com:80/context/?邮箱id=10001&userid1234";
     String url_empty_param = "http://mail.google.com:80/context/index.html";
+
+    @Test
+    public void showURL() throws MalformedURLException {
+        URL uuu = new URL(url);
+        System.out.println(uuu.getPath());
+    }
 
     @Test
     public void testURLWrapper() throws MalformedURLException {

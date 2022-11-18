@@ -38,7 +38,7 @@ public class HttpRequestParser {
         String method = headerParams[0].toUpperCase();
         String queryPath = headerParams[1];
 
-        // 兼容单元测试和API测试
+        // 兼容单元测试和API测试 TODO release 移除
         if(!queryPath.startsWith("http")){
             String protocol = context.getServer().protocol;
             String host = context.getServer().getHostAlias();

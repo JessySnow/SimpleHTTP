@@ -6,10 +6,8 @@ import org.simplehttp.server.core.SimpleHttpServer;
 import org.simplehttp.server.core.context.ServerContext;
 import org.simplehttp.server.pojo.protocol.HttpRequest;
 
-import java.io.*;
-import java.nio.charset.StandardCharsets;
-
-import static org.junit.jupiter.api.Assertions.*;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 
 class HttpRequestParserTest {
     private ServerContext context;

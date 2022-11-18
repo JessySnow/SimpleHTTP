@@ -1,7 +1,11 @@
 package org.simplehttp.server.core;
 
 import org.simplehttp.server.core.context.BaseServerContext;
+import org.simplehttp.server.enums.RequestMethod;
+import org.simplehttp.server.handler.HttpHandler;
+import org.simplehttp.server.handler.annonation.Handler;
 import org.simplehttp.server.pojo.protocol.HttpRequest;
+import org.simplehttp.server.pojo.protocol.HttpResponse;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -29,8 +33,14 @@ public class Worker implements Runnable{
             InputStream socketIn = socket.getInputStream();
             OutputStream socketOut = socket.getOutputStream();
             BaseServerContext serverContext = server.getServerContext();
-            HttpRequest parse = serverContext.getRequestParser().parse(serverContext, socketIn);
-            System.out.println(parse);
+            HttpRequest request = serverContext.getRequestParser().parse(serverContext, socketIn);
+
+            String routePath = request.getUrlWrapper().getUrl().getPath();
+            RequestMethod method = request.getBody() == null ? RequestMethod.GET : RequestMethod.POST;
+            HttpHandler handler = serverContext.getHandler(method, routePath);
+            HttpResponse response = handler.handle(request);
+
+            // 处理 Response
         } catch (IOException e) {
             // TODO 日志
         }
