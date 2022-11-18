@@ -46,4 +46,11 @@ public class HttpBody {
             this.mimeType = mimeType;
         }
     }
+
+    @Override
+    public String toString() {
+        return "HttpBody{" +
+                "body=" + body +
+                '}';
+    }
 }

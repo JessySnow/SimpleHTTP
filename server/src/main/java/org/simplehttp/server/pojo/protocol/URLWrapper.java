@@ -63,4 +63,12 @@ public class URLWrapper {
         byte[] origin = kov.getBytes();
         return new String(origin, StandardCharsets.UTF_8);
     }
+
+    @Override
+    public String toString() {
+        return "URLWrapper{" +
+                "url=" + url +
+                ", parameterMap=" + parameterMap +
+                '}';
+    }
 }

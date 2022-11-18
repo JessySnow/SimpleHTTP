@@ -29,4 +29,11 @@ public class HttpHeader {
     public String getHeaderValue(String key){
         return header.get(key);
     }
+
+    @Override
+    public String toString() {
+        return "HttpHeader{" +
+                "header=" + header +
+                '}';
+    }
 }

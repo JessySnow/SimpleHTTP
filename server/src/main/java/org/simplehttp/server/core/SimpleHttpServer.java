@@ -10,6 +10,7 @@ import org.simplehttp.server.core.context.ServerContext;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -38,10 +39,13 @@ public class SimpleHttpServer {
     @Setter
     private String hostAlias = "localhost";
 
+    private ServerSocket serverSocket;
+
     /**
      * 绑定的上下文，绑定之前需要自己到上下文中注册一下自己需要的组件
      * @see ServerContext
      */
+    @Getter
     private AbstractServerContext serverContext;
 
     /**
@@ -49,11 +53,12 @@ public class SimpleHttpServer {
      * 默认大小 5
      */
 
-    private ExecutorService fixedExecutorPool;
-    @Accessors(chain = true)
+    private final ExecutorService fixedExecutorPool;
     @Getter
     @Setter
     private static int DEFAULT_POOL_SIZE = 5;
+
+    private boolean shutDown = false;
 
     public SimpleHttpServer(){
         fixedExecutorPool = Executors.newFixedThreadPool(DEFAULT_POOL_SIZE);
@@ -67,13 +72,18 @@ public class SimpleHttpServer {
     /**
      * 启动服务器
      * TODO 添加日志支持
-     * TODO 优雅关闭
      */
     public void start(){
+        // 控制台监听
+        Thread watcher = new Thread(new ConsoleListener());
+        watcher.setDaemon(true);
+        watcher.start();
+
         try {
-            ServerSocket serverSocket = new ServerSocket(this.port);
-            while (true) {
+            serverSocket = new ServerSocket(this.port);
+            while (!shutDown) {
                 Socket accept = serverSocket.accept();
+                // 请求处理
                 fixedExecutorPool.execute(new Worker(this, accept));
             }
         } catch (IOException e) {
@@ -88,5 +98,22 @@ public class SimpleHttpServer {
         this.serverContext = context;
         context.bindServer(this);
         return this;
+    }
+
+    /**
+     * 控制台监听，任意字符加回车，处理完最后一个请求后关闭服务器
+     */
+    private class ConsoleListener implements Runnable{
+        // keyIn 不要关闭，可能会阻断后续的日志输出
+        @Override
+        public void run() {
+            try {
+                Scanner keyIn = new Scanner(System.in);
+                keyIn.nextLine();
+                shutDown = true;
+                fixedExecutorPool.shutdown();
+                serverSocket.close();
+            } catch (IOException ignored) {}
+        }
     }
 }

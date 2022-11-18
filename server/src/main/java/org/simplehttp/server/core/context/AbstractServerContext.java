@@ -19,26 +19,27 @@ import java.util.HashMap;
  * 2. 请求路由
  */
 public abstract class AbstractServerContext {
+    @Getter
     // 绑定的服务器实例引用
     public SimpleHttpServer server = null;
 
     // 请求暂存
-    protected ThreadLocal<HttpRequest> httpRequestThreadLocal;
+    protected ThreadLocal<HttpRequest> httpRequestThreadLocal = new ThreadLocal<>();
 
     // 只读 Map，在服务器启动时进行初始化，后续只会进行读操作从上下文拿 Session 实现功能，启动后不要向这个 SessionMap 中写内容
     protected final HashMap<Class<? extends Session<?,?>>, Session<?,?>> sessionHashMap = new HashMap<>();
 
     // Http 请求解析器
     @Getter
-    protected HttpRequestParser requestParser;
+    protected HttpRequestParser requestParser = new HttpRequestParser();
     // Http 响应构造器
     @Getter
-    protected HttpResponseBuilder responseBuilder;
+    protected HttpResponseBuilder responseBuilder = new HttpResponseBuilder();
     // URL 解析器
     @Getter
     @Setter
     @Accessors(chain = true)
-    protected URLParser urlParser;
+    protected URLParser urlParser = new URLParser();
 
 
     // 将当前工作线程的请求实体引用放置到上下文中

@@ -43,8 +43,7 @@ public class ServerContext extends AbstractServerContext{
     }
 
     public ServerContext(){
-        this.isFileCached = false;
-        this.isFileCached = false;
+        super();
     }
 
     public ServerContext(Session<?,?> session){
