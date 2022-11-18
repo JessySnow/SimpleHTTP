@@ -1,23 +1,13 @@
 package org.simplehttp.server.core.context;
 
-import lombok.Data;
 import lombok.Getter;
-import lombok.Setter;
-import org.simplehttp.server.core.parser.URLParser;
 import org.simplehttp.server.core.session.Session;
 import org.simplehttp.server.core.session.UserSession;
-import org.simplehttp.server.core.session.impl.ContextUserSession;
-
-import java.util.HashMap;
 
 /**
- * 服务器上下文，提供 Session 管理、线程分派、文件存取 的功能
- * 通过继承 Context 来自定义其他的功能，并绑定到 SimpleHttpServer 对象上
- * 默认组件:
- * 可选组件：
- *      @see ContextUserSession -- 用户 Session 服务
+ * 支持状态管理的上下文，这个上下文支持了 HttpSession
  */
-public class ServerContext extends AbstractServerContext{
+public class ServerContext extends BaseServerContext {
     // 下文支持的功能标志位
     @Getter
     private boolean isStateFul;

@@ -1,6 +1,6 @@
 package org.simplehttp.server.core.parser;
 
-import org.simplehttp.server.core.context.AbstractServerContext;
+import org.simplehttp.server.core.context.BaseServerContext;
 import org.simplehttp.server.enums.FixedHttpHeader;
 import org.simplehttp.server.enums.MIME;
 import org.simplehttp.server.enums.RequestMethod;
@@ -10,7 +10,6 @@ import org.simplehttp.server.pojo.protocol.HttpRequest;
 import org.simplehttp.server.pojo.protocol.URLWrapper;
 
 import java.io.*;
-import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.Optional;
@@ -19,7 +18,7 @@ public class HttpRequestParser {
     private static final byte NEWLINE = '\n';
     private static final byte ENTER = '\r';
 
-    public HttpRequest parse(AbstractServerContext context, InputStream inputStream) throws IOException, RuntimeException {
+    public HttpRequest parse(BaseServerContext context, InputStream inputStream) throws IOException, RuntimeException {
         HttpRequest request = new HttpRequest();
         HttpHeader header = new HttpHeader();
         HttpBody body = null;

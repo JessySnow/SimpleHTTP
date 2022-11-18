@@ -1,6 +1,6 @@
 package org.simplehttp.server.core;
 
-import org.simplehttp.server.core.context.AbstractServerContext;
+import org.simplehttp.server.core.context.BaseServerContext;
 import org.simplehttp.server.pojo.protocol.HttpRequest;
 
 import java.io.IOException;
@@ -28,7 +28,7 @@ public class Worker implements Runnable{
         try {
             InputStream socketIn = socket.getInputStream();
             OutputStream socketOut = socket.getOutputStream();
-            AbstractServerContext serverContext = server.getServerContext();
+            BaseServerContext serverContext = server.getServerContext();
             HttpRequest parse = serverContext.getRequestParser().parse(serverContext, socketIn);
             System.out.println(parse);
         } catch (IOException e) {

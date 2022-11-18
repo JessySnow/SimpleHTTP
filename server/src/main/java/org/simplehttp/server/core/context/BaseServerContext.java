@@ -13,12 +13,12 @@ import org.simplehttp.server.pojo.protocol.HttpRequest;
 import java.util.HashMap;
 
 /**
- * 抽象服务器上下文，提供 HTTP 服务器最核心的功能管理，通过继承这个类来拓展额外的功能
+ * 基础服务器上下文，提供 HTTP 服务器最核心的功能管理，通过继承这个类来拓展额外的功能
  * @see ServerContext
  * 1. 请求解析
  * 2. 请求路由
  */
-public abstract class AbstractServerContext {
+public class BaseServerContext {
     @Getter
     // 绑定的服务器实例引用
     public SimpleHttpServer server = null;

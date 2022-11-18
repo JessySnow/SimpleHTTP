@@ -1,10 +1,9 @@
 package org.simplehttp.server.core;
 
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import org.simplehttp.server.core.context.AbstractServerContext;
+import org.simplehttp.server.core.context.BaseServerContext;
 import org.simplehttp.server.core.context.ServerContext;
 
 import java.io.IOException;
@@ -46,7 +45,7 @@ public class SimpleHttpServer {
      * @see ServerContext
      */
     @Getter
-    private AbstractServerContext serverContext;
+    private BaseServerContext serverContext;
 
     /**
      * 固定大小的线程池
@@ -64,7 +63,7 @@ public class SimpleHttpServer {
         fixedExecutorPool = Executors.newFixedThreadPool(DEFAULT_POOL_SIZE);
     }
 
-    public SimpleHttpServer(AbstractServerContext context){
+    public SimpleHttpServer(BaseServerContext context){
         this();
         this.serverContext = context;
     }
@@ -94,7 +93,7 @@ public class SimpleHttpServer {
     /**
      * 服务器和上下文互相绑定
      */
-    public SimpleHttpServer bindContext(AbstractServerContext context){
+    public SimpleHttpServer bindContext(BaseServerContext context){
         this.serverContext = context;
         context.bindServer(this);
         return this;

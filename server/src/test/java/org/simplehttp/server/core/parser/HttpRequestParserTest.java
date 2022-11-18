@@ -31,10 +31,10 @@ class HttpRequestParserTest {
                         "Host:127.0.0.1:7890\r\n")
                 .getBytes());
         postHeaderStream_plain_text = new ByteArrayInputStream(("POST http://127.0.0.1:7890/api/index.jsp HTTP/1.1\n" +
-                "User-Agent:Fiddler Everywhere\n" +
-                "Host:127.0.0.1:7890\n" +
-                "Content-Type:text/plain\n" +
-                "Content-Length:0\n" +
+                "User-Agent:Fiddler Everywhere\r\n" +
+                "Host:127.0.0.1:7890\r\n" +
+                "Content-Type:text/plain\r\n" +
+                "Content-Length:0\r\n" +
                 "\n" +
                 "This is a plain text test.").getBytes());
     }
