@@ -57,14 +57,5 @@ class HttpRequestParserTest {
     public void testReaderFormat() throws IOException {
         byte[] bytes = "你好，世界！".getBytes(StandardCharsets.UTF_8);
         ByteArrayInputStream in = new ByteArrayInputStream(bytes);
-        ByteArrayOutputStream cache = new ByteArrayOutputStream();
-        BufferedReader reader = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
-        String line;
-        while ((line = reader.readLine()) != null){
-            cache.write(line.getBytes());
-        }
-
-        byte[] bs = cache.toByteArray();
-        assertArrayEquals(bs, bytes);
     }
 }
