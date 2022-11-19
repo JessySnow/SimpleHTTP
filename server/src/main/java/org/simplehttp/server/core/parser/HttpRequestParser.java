@@ -96,7 +96,7 @@ public class HttpRequestParser {
                             .getHeader()
                             .getHeaderValue(FixedHttpHeader.CONTENT_TYPE.key))
                     .orElse(MIME.BINARY.value);
-            MIME acceptableType = null;
+            MIME acceptableType;
             try {
                 acceptableType = Enum.valueOf(MIME.class, mimeType.replace("/","_").toUpperCase().trim());
             }catch (RuntimeException e){

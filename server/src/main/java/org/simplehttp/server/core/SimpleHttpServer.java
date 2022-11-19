@@ -18,6 +18,8 @@ import java.util.concurrent.Executors;
  */
 @Accessors(chain = true)
 public class SimpleHttpServer {
+    // 服务器的名字，扩展ASCII 字符范围内
+    public static String Server = "MySimpleHttpServer";
     public final String protocol = "http";
 
     // 监听的服务器套接字端口号，不要设置的太小(1024以上)，否则 Linux 上会出权限问题

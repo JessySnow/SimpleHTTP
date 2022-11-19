@@ -1,5 +1,7 @@
 package org.simplehttp.server.enums;
 
+import lombok.Getter;
+
 /**
  * Http 请求响应码，根据当前处理的结果语义选择一个合适的
  * eg: 处理成功，选择 OK
@@ -11,7 +13,9 @@ public enum StatusCode {
     NOT_FOUND("Not Found", 404),
     BAD_REQUEST("Bad Request", 400),
     METHOD_NOT_ALLOWED("Method Not Allowed", 405);
+    @Getter
     private String status;
+    @Getter
     private int code;
 
     StatusCode(String status, int code){

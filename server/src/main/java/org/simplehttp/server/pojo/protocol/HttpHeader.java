@@ -1,6 +1,9 @@
 package org.simplehttp.server.pojo.protocol;
 
 import lombok.Data;
+import org.simplehttp.server.enums.FixedHttpHeader;
+import org.simplehttp.server.enums.MIME;
+import org.simplehttp.server.enums.StatusCode;
 
 import java.util.HashMap;
 
@@ -29,6 +32,26 @@ public class HttpHeader {
     public String getHeaderValue(String key){
         return header.get(key);
     }
+
+    // 常见属性暴露的方法，如果没有设置这个属性，返回该属性的默认值
+    // 媒体类型
+    public HttpHeader setContentType(String type){
+        this.header.put(FixedHttpHeader.CONTENT_TYPE.key, type);
+        return this;
+    }
+    public String getContentType(){
+        String type;
+        return (type = this.header.get(FixedHttpHeader.CONTENT_TYPE.key)) == null ? MIME.BINARY.value : type;
+    }
+    // 响应状态
+    public HttpHeader setStatusCode(StatusCode statusCode){
+        this.header.put(FixedHttpHeader.STATUS_CODE.key, statusCode.getCode() + " " + statusCode.getStatus());
+        return this;
+    }
+    public String getStatusCode(){
+        return this.header.get(FixedHttpHeader.STATUS_CODE.key);
+    }
+
 
     @Override
     public String toString() {
