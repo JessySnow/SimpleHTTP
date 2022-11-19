@@ -62,6 +62,10 @@ public class BaseServerContext {
     public HttpRequest getRequest(){
         return httpRequestThreadLocal.get();
     }
+    // 线程级别的清理逻辑写在这个里面，或者在工作线程中添加也行
+    public void cleanUp(){
+        this.httpRequestThreadLocal.remove();
+    }
 
     // 绑定一个服务器
     public void bindServer(SimpleHttpServer server){
