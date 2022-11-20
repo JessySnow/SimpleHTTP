@@ -24,14 +24,14 @@ public class EchoHandler implements HttpHandler {
 
         // 必填，表示当前的请求是否成功，这里返回 200 OK
         header.setStatusCode(StatusCode.OK);
+        // 必填，表示当前返回的媒体类型
+        header.setContentType(MIME.TEXT_HTML);
 
         // 选填，向客户端返回的消息内容，如果没有可以不填
-        // 返回实体部分的 POJO 由两个部分组成，键、实体；实体部分也由两个部分组成，是返回的内容和返回的类型
+        // 返回实体部分的 POJO 由两个部分组成，媒体类型和实际的内容
         // 这里我返回 HTML 类型
-        HttpBody.BodyValueEntry entry = new HttpBody.BodyValueEntry();
         // 构造 HTML 文本
-        entry.setMimeType(MIME.TEXT_HTML);
-        entry.setContent("""
+        String html = """
                 <!DOCTYPE html>
                 <html>
                 <head>
@@ -50,10 +50,10 @@ public class EchoHandler implements HttpHandler {
                 <p><em>Thank you for using SimpleHttpServer.</em></p>
                 </body>
                 </html>
-                """);
+                """;
 
         // 装填到 body 中，当前对于 HTML、PLAIN_TEXT 的处理是将键设置成 MIME.TEXT_PLAIN.value，后面要改一下
-        body.addBodyValueEntry(MIME.TEXT_PLAIN.value, entry);
+        body.putValue(MIME.TEXT_HTML, html);
 
         return response;
     }

@@ -113,7 +113,7 @@ public class HttpRequestParser {
                     CharBuffer charBuffer = CharBuffer.allocate(1024*8192);
                     reader.read(charBuffer);
                     charBuffer.flip();
-                    body.addBodyValueEntry(acceptableType.value, charBuffer.toString(), MIME.TEXT_PLAIN);
+                    body.putValue(acceptableType, charBuffer.toString());
                 }
             }
         }
