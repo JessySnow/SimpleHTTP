@@ -9,12 +9,13 @@ import org.simplehttp.server.pojo.protocol.HttpResponse;
 import java.io.IOException;
 import java.io.OptionalDataException;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 
 public class HttpResponseBuilder {
 
     // 构建请求并将请求写入到 Socket 中
-    public static void buildAndWrite(OutputStream outputStream, HttpResponse response){
+    public static void buildAndWrite(OutputStream outputStream, HttpResponse response) throws IOException{
         String protocol = "HTTP/1.0";
         String server = SimpleHttpServer.Server;
         String contentType = response.getHeader().getContentType();
@@ -30,28 +31,22 @@ public class HttpResponseBuilder {
             acceptableType = MIME.BINARY;
         }
 
-        StringBuilder responseBuilder = new StringBuilder();
         // 首行
-        responseBuilder.append(protocol).append(" ").append(statusCode).append("\r\n");
-        // 属性行
-        responseBuilder.append(FixedHttpHeader.SERVER).append(":").append(server).append("\r\n");
-        responseBuilder.append(FixedHttpHeader.CONTENT_TYPE).append(":").append(contentType).append("\r\n");
-        // 分隔符
-        responseBuilder.append("\n");
+        String head = protocol + " " + statusCode + "\r\n" +
+                // 属性行
+                FixedHttpHeader.SERVER + ":" + server + "\r\n" +
+                FixedHttpHeader.CONTENT_TYPE + ":" + contentType + "\r\n" +
+                // 分隔符
+                "\n";
 
         // 处理响应体
         switch (acceptableType){
             // 文本类型
             case TEXT_HTML, TEXT_PLAIN -> {
-
+                head += response.getBody().getText();
+                byte[] bytes = head.getBytes(StandardCharsets.UTF_8);
+                outputStream.write(bytes);
             }
-        }
-
-        byte[] res = responseBuilder.toString().getBytes();
-        try {
-            outputStream.write(res);
-        } catch (IOException ignored) {
-            // TODO 这个异常需要被处理
         }
     }
 }

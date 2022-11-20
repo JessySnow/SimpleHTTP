@@ -53,4 +53,10 @@ public class HttpBody {
                 "body=" + body +
                 '}';
     }
+
+    // 对于常见的几种返回类型添加的支持方法
+    // 对于返回类型是普通文本的情况
+    public String getText(){
+        return (String)this.body.get(MIME.TEXT_PLAIN.value).getContent();
+    }
 }
