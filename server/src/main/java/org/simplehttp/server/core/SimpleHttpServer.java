@@ -26,7 +26,7 @@ public class SimpleHttpServer {
     @Accessors(chain = true)
     @Getter
     @Setter
-    private int port = 9520;
+    private int port = 9098;
 
     // 服务器的根目录 eg http://127.0.0.1:7070/simple/index.html 中的 simple，默认为 '/'
     @Accessors(chain = true)

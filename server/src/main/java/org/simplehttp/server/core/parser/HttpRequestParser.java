@@ -23,7 +23,6 @@ public class HttpRequestParser {
         HttpHeader header = new HttpHeader();
         HttpBody body = null;
 
-        // 头部扩展 ASCII 码处理, 服务器最大头部限制 8k
         byte pre = -1;
         byte cur;
         // 头部构造器
@@ -38,13 +37,13 @@ public class HttpRequestParser {
         String method = headerParams[0].toUpperCase();
         String queryPath = headerParams[1];
 
-        // 兼容单元测试和API测试 TODO release 移除
+//         兼容单元测试和API测试 TODO release 移除
         if(!queryPath.startsWith("http")){
             String protocol = context.getServer().protocol;
             String host = context.getServer().getHostAlias();
             String contextPath = context.getServer().getContextPath();
             int port = context.getServer().getPort();
-            queryPath = protocol + "://" + host + contextPath + ":" + port + queryPath;
+            queryPath = protocol + "://" + host + ":" + port + queryPath;
         }
 
         // 协议字段不处理，仅支持 HTTP1.0 短连接
