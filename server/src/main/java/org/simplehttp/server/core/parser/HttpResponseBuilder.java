@@ -6,6 +6,7 @@ import org.simplehttp.server.enums.MIME;
 import org.simplehttp.server.pojo.protocol.HttpBody;
 import org.simplehttp.server.pojo.protocol.HttpResponse;
 
+import java.io.IOException;
 import java.io.OptionalDataException;
 import java.io.OutputStream;
 import java.util.Optional;
@@ -18,9 +19,16 @@ public class HttpResponseBuilder {
         String server = SimpleHttpServer.Server;
         String contentType = response.getHeader().getContentType();
         String statusCode = response.getHeader().getStatusCode();
-        MIME acceptableType = Enum.valueOf(MIME.class, contentType.replace("/", "_")
+
+        // 响应字段额外处理，如果返回类型是一个不支持的媒体类型，使用二进制让客户端直接下载
+        MIME acceptableType;
+        try{
+            acceptableType = Enum.valueOf(MIME.class, contentType.replace("/", "_")
                                                                                         .toUpperCase()
                                                                                         .trim());
+        } catch (Exception e){
+            acceptableType = MIME.BINARY;
+        }
 
         StringBuilder responseBuilder = new StringBuilder();
         // 首行
@@ -33,7 +41,17 @@ public class HttpResponseBuilder {
 
         // 处理响应体
         switch (acceptableType){
+            // 文本类型
+            case TEXT_HTML, TEXT_PLAIN -> {
 
+            }
+        }
+
+        byte[] res = responseBuilder.toString().getBytes();
+        try {
+            outputStream.write(res);
+        } catch (IOException ignored) {
+            // TODO 这个异常需要被处理
         }
     }
 }
