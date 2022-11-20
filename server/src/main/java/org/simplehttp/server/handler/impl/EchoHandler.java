@@ -1,7 +1,12 @@
 package org.simplehttp.server.handler.impl;
 
+import org.simplehttp.server.enums.MIME;
 import org.simplehttp.server.enums.RequestMethod;
+import org.simplehttp.server.enums.StatusCode;
 import org.simplehttp.server.handler.HttpHandler;
+import org.simplehttp.server.handler.annonation.Handler;
+import org.simplehttp.server.pojo.protocol.HttpBody;
+import org.simplehttp.server.pojo.protocol.HttpHeader;
 import org.simplehttp.server.pojo.protocol.HttpRequest;
 import org.simplehttp.server.pojo.protocol.HttpResponse;
 
@@ -9,10 +14,44 @@ import org.simplehttp.server.pojo.protocol.HttpResponse;
  * Handler 示例
  * 使用 Http协议 实现的 Echo 服务
  */
-@org.simplehttp.server.handler.annonation.Handler(method = RequestMethod.GET, routePath = "/echo")
+@Handler(method = RequestMethod.GET, routePath = "/echo")
 public class EchoHandler implements HttpHandler {
     @Override
     public HttpResponse handle(HttpRequest request) {
-        return null;
+        HttpResponse response = new HttpResponse();
+        HttpHeader header = response.getHeader();
+        HttpBody body = response.getBody();
+
+        // 必填，表示当前的请求是否成功，这里返回 200 OK
+        header.setStatusCode(StatusCode.OK);
+
+        // 选填，向客户端返回的消息内容，如果没有可以不填
+        // 返回实体部分的 POJO 由两个部分组成，键、实体；实体部分也由两个部分组成，是返回的内容和返回的类型
+        // 这里我返回 HTML 类型
+        HttpBody.BodyValueEntry entry = new HttpBody.BodyValueEntry();
+        // 返回 HTML
+        entry.setMimeType(MIME.TEXT_HTML);
+        entry.setContent("""
+                <!DOCTYPE html>
+                <html>
+                <head>
+                <title>SimpleHttpServer!</title>
+                <style>
+                    body {
+                        width: 35em;
+                        margin: 0 auto;
+                        font-family: Tahoma, Verdana, Arial, sans-serif;
+                    }
+                </style>
+                </head>
+                <body>
+                <h1>Welcome to SimpleHttpServer!</h1>
+                <p>If you see this page, the SimpleHttpServer web server is successfully working.</p>
+                <p><em>Thank you for using SimpleHttpServer.</em></p>
+                </body>
+                </html>
+                """);
+
+        return response;
     }
 }
