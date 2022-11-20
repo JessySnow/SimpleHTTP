@@ -4,7 +4,6 @@ import org.simplehttp.server.core.context.BaseServerContext;
 import org.simplehttp.server.core.parser.HttpResponseBuilder;
 import org.simplehttp.server.enums.RequestMethod;
 import org.simplehttp.server.handler.HttpHandler;
-import org.simplehttp.server.handler.annonation.Handler;
 import org.simplehttp.server.pojo.protocol.HttpRequest;
 import org.simplehttp.server.pojo.protocol.HttpResponse;
 

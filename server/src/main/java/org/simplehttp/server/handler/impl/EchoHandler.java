@@ -14,7 +14,7 @@ import org.simplehttp.server.pojo.protocol.HttpResponse;
  * Handler 示例
  * 使用 Http协议 实现的 Echo 服务
  */
-@Handler(method = RequestMethod.GET, routePath = "/api/echo")
+@Handler(method = RequestMethod.GET, routePath = "/test/echo")
 public class EchoHandler implements HttpHandler {
     @Override
     public HttpResponse handle(HttpRequest request) {
@@ -32,24 +32,25 @@ public class EchoHandler implements HttpHandler {
         // 这里我返回 HTML 类型
         // 构造 HTML 文本
         String html = """
-                <!DOCTYPE html>
-                <html>
-                <head>
-                <title>SimpleHttpServer!</title>
-                <style>
-                    body {
-                        width: 35em;
-                        margin: 0 auto;
-                        font-family: Tahoma, Verdana, Arial, sans-serif;
-                    }
-                </style>
-                </head>
-                <body>
-                <h1>Welcome to SimpleHttpServer!</h1>
-                <p>If you see this page, the SimpleHttpServer web server is successfully working.</p>
-                <p><em>Thank you for using SimpleHttpServer.</em></p>
-                </body>
-                </html>
+                    <!DOCTYPE html>
+                    <html>
+                    <head>
+                        <title>SimpleHttpServer!</title>
+                        <style>
+                            body {
+                                width: 35em;
+                                margin: 0 auto;
+                                font-family: Tahoma, Verdana, Arial, sans-serif;
+                                background-image:url('https://s1.ax1x.com/2022/11/20/zKz4KI.jpg');
+                            }
+                        </style>
+                    </head>
+                    <body>
+                    <h1>欢迎来到 SimpleHttpServer!</h1>
+                    <p>如果你看见了这个页面, SimpleHttpServer 已经成功工作.</p>
+                    <p><em>感谢使用 SimpleHttpServer.</em></p>
+                    </body>
+                    </html>
                 """;
 
         // 装填到 body 中，当前对于 HTML、PLAIN_TEXT 的处理是将键设置成 MIME.TEXT_PLAIN.value，后面要改一下

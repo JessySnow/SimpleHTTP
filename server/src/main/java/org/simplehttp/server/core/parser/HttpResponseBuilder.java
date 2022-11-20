@@ -3,14 +3,11 @@ package org.simplehttp.server.core.parser;
 import org.simplehttp.server.core.SimpleHttpServer;
 import org.simplehttp.server.enums.FixedHttpHeader;
 import org.simplehttp.server.enums.MIME;
-import org.simplehttp.server.pojo.protocol.HttpBody;
 import org.simplehttp.server.pojo.protocol.HttpResponse;
 
 import java.io.IOException;
-import java.io.OptionalDataException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
-import java.util.Optional;
 
 public class HttpResponseBuilder {
 
@@ -34,17 +31,17 @@ public class HttpResponseBuilder {
         // 首行
         String head = protocol + " " + statusCode + "\r\n" +
                 // 属性行
-                FixedHttpHeader.SERVER + ":" + server + "\r\n" +
-                FixedHttpHeader.CONTENT_TYPE + ":" + contentType + "\r\n" +
-                // 分隔符
-                "\n";
+                FixedHttpHeader.SERVER.key + ":" + server + "\r\n" +
+                FixedHttpHeader.CONTENT_TYPE.key + ":" + contentType + "\r\n";
 
+        String body;
         // 处理响应体
         switch (acceptableType){
             // 文本类型
             case TEXT_HTML, TEXT_PLAIN -> {
-                head += response.getBody().getText();
-                byte[] bytes = head.getBytes(StandardCharsets.UTF_8);
+                body = response.getBody().getText();
+                String content = head + "\n" + body;
+                byte[] bytes = content.getBytes(StandardCharsets.UTF_8);
                 outputStream.write(bytes);
             }
         }

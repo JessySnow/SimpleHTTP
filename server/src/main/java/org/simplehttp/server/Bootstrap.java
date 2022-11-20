@@ -18,7 +18,7 @@ public class Bootstrap {
         new SimpleHttpServer()
                 .setPort(9990)
                 .setHostAlias("localhost")
-                .setContextPath("/api")
+                .setContextPath("/test")
                 .bindContext(new ServerContext().addHandler(EchoHandler.class))
                 .start();
     }
