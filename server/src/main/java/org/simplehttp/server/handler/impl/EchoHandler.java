@@ -14,7 +14,7 @@ import org.simplehttp.server.pojo.protocol.HttpResponse;
  * Handler 示例
  * 使用 Http协议 实现的 Echo 服务
  */
-@Handler(method = RequestMethod.GET, routePath = "/echo")
+@Handler(method = RequestMethod.GET, routePath = "/api/echo")
 public class EchoHandler implements HttpHandler {
     @Override
     public HttpResponse handle(HttpRequest request) {
@@ -29,7 +29,7 @@ public class EchoHandler implements HttpHandler {
         // 返回实体部分的 POJO 由两个部分组成，键、实体；实体部分也由两个部分组成，是返回的内容和返回的类型
         // 这里我返回 HTML 类型
         HttpBody.BodyValueEntry entry = new HttpBody.BodyValueEntry();
-        // 返回 HTML
+        // 构造 HTML 文本
         entry.setMimeType(MIME.TEXT_HTML);
         entry.setContent("""
                 <!DOCTYPE html>
@@ -51,6 +51,9 @@ public class EchoHandler implements HttpHandler {
                 </body>
                 </html>
                 """);
+
+        // 装填到 body 中，当前对于 HTML、PLAIN_TEXT 的处理是将键设置成 MIME.TEXT_PLAIN.value，后面要改一下
+        body.addBodyValueEntry(MIME.TEXT_PLAIN.value, entry);
 
         return response;
     }

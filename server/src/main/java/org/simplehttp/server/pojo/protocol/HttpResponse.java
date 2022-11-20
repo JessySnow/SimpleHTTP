@@ -14,4 +14,9 @@ import lombok.Getter;
 public class HttpResponse {
     private HttpHeader header;
     private HttpBody body;
+
+    public HttpResponse(){
+        this.header = new HttpHeader();
+        this.body = new HttpBody();
+    }
 }

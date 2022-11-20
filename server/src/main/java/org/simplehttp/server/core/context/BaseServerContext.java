@@ -15,7 +15,6 @@ import org.simplehttp.server.pojo.protocol.HttpRequest;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
-import java.util.HashSet;
 
 /**
  * 基础服务器上下文，提供 HTTP 服务器最核心的功能管理，通过继承这个类来拓展额外的功能
@@ -35,8 +34,8 @@ public class BaseServerContext {
     // TODO 动态枚举加快匹配
     // 缓存的无状态处理器，在类绑定到上下文时被初始化
     // 处理器集合，一级路由按照请求方法进行
-    protected HashMap<String, HttpHandler> getHttpHandlerMap;
-    protected HashMap<String, HttpHandler> postHttpHandlerMap;
+    protected HashMap<String, HttpHandler> getHttpHandlerMap = new HashMap<>();
+    protected HashMap<String, HttpHandler> postHttpHandlerMap = new HashMap<>();
 
     // 只读 Map，在服务器启动时进行初始化，后续只会进行读操作从上下文拿 Session 实现功能，启动后不要向这个 SessionMap 中写内容
     protected final HashMap<Class<? extends Session<?,?>>, Session<?,?>> sessionHashMap = new HashMap<>();
