@@ -14,7 +14,7 @@ import org.simplehttp.server.pojo.protocol.HttpResponse;
  * Handler 示例
  * 使用 Http协议 实现的 Echo 服务
  */
-@Handler(method = RequestMethod.GET, routePath = "/test/echo")
+@Handler(method = RequestMethod.GET, routePath = "/echo")
 public class EchoHandler implements HttpHandler {
     @Override
     public HttpResponse handle(HttpRequest request) {

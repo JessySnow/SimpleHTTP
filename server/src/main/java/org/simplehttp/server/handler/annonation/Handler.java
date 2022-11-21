@@ -16,7 +16,7 @@ public @interface Handler {
     /**
      * 必填项，路由的唯一标识，这个路径指的是指完整的路径，包括了 contextPath
      * eg：contextPath = /api，如果你要访问 /api/test?userid=1 这个资源
-     *     那么这里的 routePath 就是 "/api/test"
+     *     那么这里的 routePath 就是 "/test"，前面的 contextPath 会在示例化 Handler 的时候添加到路径中
      */
     String routePath();
 

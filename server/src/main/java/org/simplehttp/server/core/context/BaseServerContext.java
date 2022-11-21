@@ -31,7 +31,7 @@ public class BaseServerContext {
     protected ThreadLocal<HttpRequest> httpRequestThreadLocal = new ThreadLocal<>();
 
     // TODO 包扫描
-    // TODO 动态枚举加快匹配
+    // TODO 动态枚举Map加快匹配
     // 缓存的无状态处理器，在类绑定到上下文时被初始化
     // 处理器集合，一级路由按照请求方法进行
     protected HashMap<String, HttpHandler> getHttpHandlerMap = new HashMap<>();
@@ -77,9 +77,9 @@ public class BaseServerContext {
             HttpHandler httpHandler = clazz.getConstructor().newInstance();
             Handler annotation = clazz.getAnnotation(Handler.class);
             if (annotation.method().equals(RequestMethod.GET)){
-                getHttpHandlerMap.put(annotation.routePath(), httpHandler);
+                getHttpHandlerMap.put(server.getContextPath() + annotation.routePath(), httpHandler);
             } else if (annotation.method().equals(RequestMethod.POST)){
-                postHttpHandlerMap.put(annotation.routePath(), httpHandler);
+                postHttpHandlerMap.put(server.getContextPath() + annotation.routePath(), httpHandler);
             }else {
                 throw new IllegalArgumentException("不支持的请求方法");
             }
