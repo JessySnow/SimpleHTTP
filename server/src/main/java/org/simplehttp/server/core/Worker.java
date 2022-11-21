@@ -1,7 +1,7 @@
 package org.simplehttp.server.core;
 
+import lombok.extern.log4j.Log4j2;
 import org.simplehttp.server.core.context.BaseServerContext;
-import org.simplehttp.server.core.parser.HttpResponseBuilder;
 import org.simplehttp.server.enums.RequestMethod;
 import org.simplehttp.server.handler.HttpHandler;
 import org.simplehttp.server.pojo.protocol.HttpRequest;
@@ -16,6 +16,7 @@ import java.net.Socket;
 /**
  * 工作线程，负责每一个到来请求的处理
  */
+@Log4j2
 public class Worker implements Runnable{
 
     // 获取启动的服务器的实例的引用
@@ -36,8 +37,6 @@ public class Worker implements Runnable{
             BaseServerContext serverContext = server.getServerContext();
             HttpRequest request = serverContext.getRequestParser().parse(serverContext, socketIn);
 
-            // 清理可能遗留的脏数据
-            serverContext.cleanUp();
 
             String routePath = request.getUrlWrapper().getUrl().getPath();
             RequestMethod method = request.getBody() == null ? RequestMethod.GET : RequestMethod.POST;
@@ -45,13 +44,13 @@ public class Worker implements Runnable{
             HttpResponse response = handler.handle(request);
 
             // 处理 Response
-            HttpResponseBuilder.buildAndWrite(socketOut, response);
+            serverContext.getResponseBuilder().buildAndWrite(socketOut, response);
 
             // Socket、ThreadLocal 资源清理
             cleanUp(socketIn, socketOut, socket);
-            serverContext.cleanUp();
         } catch (IOException e) {
             // TODO 日志
+            log.error("请求处理过程中出现了IO异常");
         }
     }
 

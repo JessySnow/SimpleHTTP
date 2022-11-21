@@ -1,7 +1,7 @@
 package org.simplehttp.server;
 
 import org.simplehttp.server.core.SimpleHttpServer;
-import org.simplehttp.server.core.context.ServerContext;
+import org.simplehttp.server.core.context.BaseServerContext;
 import org.simplehttp.server.handler.impl.EchoHandler;
 
 /**
@@ -18,7 +18,7 @@ public class Bootstrap {
                 .setPort(9990)
                 .setHostAlias("localhost")
                 .setContextPath("/test")
-                .bindContext(new ServerContext());
+                .bindContext(new BaseServerContext());
 
         // 添加处理器处理器
         localhost.getServerContext().addHandler(EchoHandler.class);

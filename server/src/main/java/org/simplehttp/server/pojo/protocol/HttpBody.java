@@ -30,7 +30,7 @@ public class HttpBody {
     // 对于返回类型是普通文本的情况
     public String getText(){
         String res;
-        return (res = (String)this.body.get(MIME.TEXT_PLAIN.value)) == null ?
+        return (res = (String)this.body.get(MIME.TEXT_PLAIN)) == null ?
                 (String) this.body.get(MIME.TEXT_HTML) :
                 res;
     }

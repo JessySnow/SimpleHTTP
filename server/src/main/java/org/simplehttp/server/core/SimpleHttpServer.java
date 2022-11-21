@@ -16,12 +16,14 @@ import java.util.concurrent.Executors;
 
 /**
  * 服务器实体对象
+ * 这个对象只负责进行 端口监听、服务器属性设置、工作线程管理、服务器启停、相关的资源管理 这四个功能
  */
 @Accessors(chain = true)
 @Log4j2
 public class SimpleHttpServer {
     // 服务器的名字，扩展ASCII 字符范围内
     public static String Server = "MySimpleHttpServer";
+    // 协议名称，暂时没用
     public final String protocol = "http";
 
     // 监听的服务器套接字端口号，不要设置的太小(1024以上)，否则 Linux 上会出权限问题
@@ -42,6 +44,7 @@ public class SimpleHttpServer {
     @Setter
     private String hostAlias = "localhost";
 
+    // 监听 Socket
     private ServerSocket serverSocket;
 
     /**
@@ -67,24 +70,24 @@ public class SimpleHttpServer {
         fixedExecutorPool = Executors.newFixedThreadPool(DEFAULT_POOL_SIZE);
     }
 
-    public SimpleHttpServer(BaseServerContext context){
-        this();
-        this.serverContext = context;
-    }
 
     /**
      * 启动服务器
      */
     public void start(){
+        if (null == this.serverContext){
+            log.error("服务器未绑定有效的上下文，请检查检查启动类");
+        }
         // 控制台监听
         Thread watcher = new Thread(new ConsoleListener());
         watcher.setDaemon(true);
         watcher.start();
 
-        log.info("服务器协议");
-//        log.info("服务器别名: {}",hostAlias);
-//        log.info("服务器端口: {}",port);
-//        log.info("服务器上下文路径: {}", contextPath);
+        log.info("服务器协议: {}",protocol);
+        log.info("服务器别名: {}",hostAlias);
+        log.info("服务器端口: {}",port);
+        log.info("服务器上下文路径: {}", contextPath);
+        log.info("服务器已经启动在: {}://{}:{}{}",protocol,hostAlias,port,contextPath);
 
         try {
             serverSocket = new ServerSocket(this.port);
@@ -94,7 +97,11 @@ public class SimpleHttpServer {
                 fixedExecutorPool.execute(new Worker(this, accept));
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            if(!shutDown) {
+                e.printStackTrace();
+            }else {
+                log.info("服务器被主动关闭");
+            }
         }
     }
 
@@ -118,6 +125,7 @@ public class SimpleHttpServer {
                 shutDown = true;
                 fixedExecutorPool.shutdown();
                 serverSocket.close();
+                log.info("服务器将会在处理完最后一个请求后关闭");
             } catch (IOException ignored) {}
         }
     }

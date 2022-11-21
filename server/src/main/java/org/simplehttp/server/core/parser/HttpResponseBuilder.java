@@ -12,7 +12,7 @@ import java.nio.charset.StandardCharsets;
 public class HttpResponseBuilder {
 
     // 构建请求并将请求写入到 Socket 中
-    public static void buildAndWrite(OutputStream outputStream, HttpResponse response) throws IOException{
+    public void buildAndWrite(OutputStream outputStream, HttpResponse response) throws IOException{
         String protocol = "HTTP/1.0";
         String server = SimpleHttpServer.Server;
         String contentType = response.getHeader().getContentType();
@@ -26,6 +26,12 @@ public class HttpResponseBuilder {
                                                                                         .trim());
         } catch (Exception e){
             acceptableType = MIME.BINARY;
+            contentType = MIME.BINARY.value;
+        }
+
+        // 文本信息添加编码类型
+        if(contentType.contains("text")){
+            contentType += " ;charset=utf-8";
         }
 
         // 首行

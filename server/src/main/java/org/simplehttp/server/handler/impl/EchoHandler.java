@@ -53,7 +53,7 @@ public class EchoHandler implements HttpHandler {
                     </html>
                 """;
 
-        // 装填到 body 中，当前对于 HTML、PLAIN_TEXT 的处理是将键设置成 MIME.TEXT_PLAIN.value，后面要改一下
+        // 装填到 body 中，当前对于 HTML、PLAIN_TEXT 的处理是将键设置成 MIME.TEXT_PLAIN
         body.putValue(MIME.TEXT_HTML, html);
 
         return response;

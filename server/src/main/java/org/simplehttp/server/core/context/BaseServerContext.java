@@ -3,6 +3,7 @@ package org.simplehttp.server.core.context;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import lombok.extern.log4j.Log4j2;
 import org.simplehttp.server.core.SimpleHttpServer;
 import org.simplehttp.server.core.parser.HttpRequestParser;
 import org.simplehttp.server.core.parser.HttpResponseBuilder;
@@ -22,12 +23,13 @@ import java.util.HashMap;
  * 1. 请求解析
  * 2. 请求路由
  */
+@Log4j2
 public class BaseServerContext {
     @Getter
     // 绑定的服务器实例引用
     public SimpleHttpServer server = null;
 
-    // 请求暂存
+    // 请求暂存，暂时没用到
     protected ThreadLocal<HttpRequest> httpRequestThreadLocal = new ThreadLocal<>();
 
     // TODO 包扫描
@@ -61,15 +63,12 @@ public class BaseServerContext {
     public HttpRequest getRequest(){
         return httpRequestThreadLocal.get();
     }
-    // 线程级别的清理逻辑写在这个里面，或者在工作线程中添加也行
-    public void cleanUp(){
-        this.httpRequestThreadLocal.remove();
-    }
 
     // 绑定一个服务器
     public void bindServer(SimpleHttpServer server){
         this.server = server;
     }
+
 
     // 添加一个处理器
     public BaseServerContext addHandler(Class<? extends HttpHandler> clazz){
@@ -84,9 +83,11 @@ public class BaseServerContext {
                 throw new IllegalArgumentException("不支持的请求方法");
             }
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
-            // TODO 提示有 Handler 没有加载成功，但是不结束加载服务器的其他组件
+            log.error("实例化处理器失败{}",clazz.getName());
         }catch (IllegalArgumentException e){
-            // TODO 提示有 Handler 没有加载成功，但是不结束加载服务器的其他的 Handler
+            log.error("暂不支持对应请求方法的处理器: {}",clazz.getName());
+        }catch (NullPointerException e){
+            log.error("实例化处理器失败，请检查处理器注解{}", clazz.getName());
         }
         return this;
     }
