@@ -3,6 +3,7 @@ package org.simplehttp.server.core;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import lombok.extern.log4j.Log4j2;
 import org.simplehttp.server.core.context.BaseServerContext;
 import org.simplehttp.server.core.context.ServerContext;
 
@@ -17,6 +18,7 @@ import java.util.concurrent.Executors;
  * 服务器实体对象
  */
 @Accessors(chain = true)
+@Log4j2
 public class SimpleHttpServer {
     // 服务器的名字，扩展ASCII 字符范围内
     public static String Server = "MySimpleHttpServer";
@@ -72,13 +74,17 @@ public class SimpleHttpServer {
 
     /**
      * 启动服务器
-     * TODO 添加日志支持
      */
     public void start(){
         // 控制台监听
         Thread watcher = new Thread(new ConsoleListener());
         watcher.setDaemon(true);
         watcher.start();
+
+        log.info("服务器协议");
+//        log.info("服务器别名: {}",hostAlias);
+//        log.info("服务器端口: {}",port);
+//        log.info("服务器上下文路径: {}", contextPath);
 
         try {
             serverSocket = new ServerSocket(this.port);
@@ -105,11 +111,9 @@ public class SimpleHttpServer {
      * 控制台监听，任意字符加回车，处理完最后一个请求后关闭服务器
      */
     private class ConsoleListener implements Runnable{
-        // keyIn 不要关闭，可能会阻断后续的日志输出
         @Override
         public void run() {
-            try {
-                Scanner keyIn = new Scanner(System.in);
+            try (Scanner keyIn = new Scanner(System.in)){
                 keyIn.nextLine();
                 shutDown = true;
                 fixedExecutorPool.shutdown();
