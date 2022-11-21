@@ -75,10 +75,19 @@ public class BaseServerContext {
         try {
             HttpHandler httpHandler = clazz.getConstructor().newInstance();
             Handler annotation = clazz.getAnnotation(Handler.class);
+            String path = server.getContextPath() + annotation.routePath();
             if (annotation.method().equals(RequestMethod.GET)){
-                getHttpHandlerMap.put(server.getContextPath() + annotation.routePath(), httpHandler);
+                if(null != getHttpHandlerMap.get(path)){
+                    log.error("处理器存在路径冲突，请检查:{}, {}", getHttpHandlerMap.get(path).getClass().getName(),
+                            clazz.getName());
+                }
+                getHttpHandlerMap.put(path, httpHandler);
             } else if (annotation.method().equals(RequestMethod.POST)){
-                postHttpHandlerMap.put(server.getContextPath() + annotation.routePath(), httpHandler);
+                if(null != postHttpHandlerMap.get(path)){
+                    log.error("处理器存在路径冲突，请检查:{}, {}", postHttpHandlerMap.get(path).getClass().getName(),
+                            clazz.getName());
+                }
+                postHttpHandlerMap.put(path, httpHandler);
             }else {
                 throw new IllegalArgumentException("不支持的请求方法");
             }

@@ -3,6 +3,7 @@ package org.simplehttp.server;
 import org.simplehttp.server.core.SimpleHttpServer;
 import org.simplehttp.server.core.context.BaseServerContext;
 import org.simplehttp.server.handler.impl.EchoHandler;
+import org.simplehttp.server.handler.impl.PathParamHandler;
 
 /**
  * 服务器启动 Demo
@@ -21,7 +22,9 @@ public class Bootstrap {
                 .bindContext(new BaseServerContext());
 
         // 添加处理器处理器
-        localhost.getServerContext().addHandler(EchoHandler.class);
+        localhost.getServerContext()
+                .addHandler(EchoHandler.class)
+                .addHandler(PathParamHandler.class);
 
         // 启动服务器
         localhost.start();

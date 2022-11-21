@@ -1,5 +1,6 @@
 package org.simplehttp.server.core.parser;
 
+import lombok.extern.log4j.Log4j2;
 import org.simplehttp.server.core.context.BaseServerContext;
 import org.simplehttp.server.enums.FixedHttpHeader;
 import org.simplehttp.server.enums.MIME;
@@ -14,6 +15,7 @@ import java.nio.CharBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 
+@Log4j2
 public class HttpRequestParser {
     private static final byte NEWLINE = '\n';
     private static final byte ENTER = '\r';
@@ -55,7 +57,8 @@ public class HttpRequestParser {
                 body = new HttpBody();
             }
         }catch (RuntimeException e){
-            throw new RuntimeException("不支持的 HTTP 请求方法");
+            log.info("不支持的 HTTP 请求方法: " + method);
+            throw new RuntimeException("不支持的 HTTP 请求方法: " + method);
         }
         URLWrapper urlWrapper = context.getUrlParser().parse(context.server, queryPath);
         request.setUrlWrapper(urlWrapper);

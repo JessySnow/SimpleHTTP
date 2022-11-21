@@ -51,6 +51,8 @@ public class Worker implements Runnable{
         } catch (IOException e) {
             // TODO 日志
             log.error("请求处理过程中出现了IO异常");
+        }catch (RuntimeException e){
+            log.error("运行时异常,{}",e.getMessage());
         }
     }
 
