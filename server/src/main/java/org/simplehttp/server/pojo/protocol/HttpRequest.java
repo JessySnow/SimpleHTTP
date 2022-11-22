@@ -1,6 +1,7 @@
 package org.simplehttp.server.pojo.protocol;
 
 import lombok.Data;
+import org.simplehttp.common.core.URLWrapper;
 
 
 /**

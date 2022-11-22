@@ -1,15 +1,15 @@
 package org.simplehttp.server.core.parser;
 
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.simplehttp.common.core.URLWrapper;
 import org.simplehttp.server.core.SimpleHttpServer;
-import org.simplehttp.server.pojo.protocol.URLWrapper;
 
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class URLParserTest {
     SimpleHttpServer simpleHttpServer = new SimpleHttpServer();

@@ -1,11 +1,13 @@
 package org.simplehttp.server.pojo.protocol;
 
 import org.junit.jupiter.api.Test;
+import org.simplehttp.common.core.URLWrapper;
 
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class URLWrapperTest {
     String url = "http://mail.google.com:80/context?mailid=10001&userid=1234";

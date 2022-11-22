@@ -1,4 +1,4 @@
-package org.simplehttp.server.pojo.protocol;
+package org.simplehttp.common.core;
 
 import lombok.Getter;
 

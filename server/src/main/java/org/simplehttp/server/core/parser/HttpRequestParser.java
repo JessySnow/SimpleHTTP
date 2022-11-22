@@ -1,6 +1,7 @@
 package org.simplehttp.server.core.parser;
 
 import lombok.extern.log4j.Log4j2;
+import org.simplehttp.common.core.URLWrapper;
 import org.simplehttp.server.core.context.BaseServerContext;
 import org.simplehttp.server.enums.FixedHttpHeader;
 import org.simplehttp.server.enums.MIME;
@@ -8,7 +9,6 @@ import org.simplehttp.server.enums.RequestMethod;
 import org.simplehttp.server.pojo.protocol.HttpBody;
 import org.simplehttp.server.pojo.protocol.HttpHeader;
 import org.simplehttp.server.pojo.protocol.HttpRequest;
-import org.simplehttp.server.pojo.protocol.URLWrapper;
 
 import java.io.BufferedReader;
 import java.io.IOException;

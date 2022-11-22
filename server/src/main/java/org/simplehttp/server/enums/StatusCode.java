@@ -14,9 +14,9 @@ public enum StatusCode {
     BAD_REQUEST("Bad Request", 400),
     METHOD_NOT_ALLOWED("Method Not Allowed", 405);
     @Getter
-    private String status;
+    private final String status;
     @Getter
-    private int code;
+    private final int code;
 
     StatusCode(String status, int code){
         this.status = status;

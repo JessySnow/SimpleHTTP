@@ -1,7 +1,7 @@
 package org.simplehttp.server.core.parser;
 
+import org.simplehttp.common.core.URLWrapper;
 import org.simplehttp.server.core.SimpleHttpServer;
-import org.simplehttp.server.pojo.protocol.URLWrapper;
 
 import java.net.MalformedURLException;
 import java.net.URL;
