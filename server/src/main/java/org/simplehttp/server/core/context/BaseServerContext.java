@@ -30,10 +30,7 @@ public class BaseServerContext {
     public SimpleHttpServer server = null;
 
     // 请求暂存，暂时没用到
-    protected ThreadLocal<HttpRequest> httpRequestThreadLocal = new ThreadLocal<>();
 
-    // TODO 包扫描
-    // TODO 动态枚举Map加快匹配
     // 缓存的无状态处理器，在类绑定到上下文时被初始化
     // 处理器集合，一级路由按照请求方法进行
     protected HashMap<String, HttpHandler> getHttpHandlerMap = new HashMap<>();
@@ -54,15 +51,6 @@ public class BaseServerContext {
     @Accessors(chain = true)
     protected URLParser urlParser = new URLParser();
 
-
-    // 将当前工作线程的请求实体引用放置到上下文中
-    public void putRequest(HttpRequest request){
-        this.httpRequestThreadLocal.set(request);
-    }
-    // 从上下文获取当前工作线程的请求实体引用
-    public HttpRequest getRequest(){
-        return httpRequestThreadLocal.get();
-    }
 
     // 绑定一个服务器
     public void bindServer(SimpleHttpServer server){
