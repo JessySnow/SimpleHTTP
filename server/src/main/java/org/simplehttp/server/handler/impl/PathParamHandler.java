@@ -5,10 +5,10 @@ import org.simplehttp.common.enums.RequestMethod;
 import org.simplehttp.server.enums.StatusCode;
 import org.simplehttp.server.handler.HttpHandler;
 import org.simplehttp.server.handler.annonation.Handler;
-import org.simplehttp.server.pojo.protocol.HttpBody;
-import org.simplehttp.server.pojo.protocol.HttpHeader;
-import org.simplehttp.server.pojo.protocol.HttpRequest;
-import org.simplehttp.server.pojo.protocol.HttpResponse;
+import org.simplehttp.server.enums.pojo.protocol.HttpBody;
+import org.simplehttp.server.enums.pojo.protocol.HttpHeader;
+import org.simplehttp.server.enums.pojo.protocol.HttpRequest;
+import org.simplehttp.server.enums.pojo.protocol.HttpResponse;
 
 /**
  * 路径参数处理器示例

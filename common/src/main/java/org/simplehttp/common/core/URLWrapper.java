@@ -16,7 +16,7 @@ public class URLWrapper {
         if(url.getQuery() != null && !url.getQuery().isEmpty()){
             parameterMap = new HashMap<>();
             // 编码检查，不接受未经编码的请求
-            checkQueryFormat(url.getQuery());
+            checkQueryFormat();
 
             String[] query = url.getQuery().split("[&=]");
 
@@ -35,10 +35,9 @@ public class URLWrapper {
 
     /**
      * 检查请求合法性
-     * @param query 请求串
      */
-    private void checkQueryFormat(String query) throws RuntimeException{
-        char[] chars = query.toCharArray();
+    private void checkQueryFormat() throws RuntimeException{
+        char[] chars = url.getQuery().toCharArray();
         int equalCount = 0;
         int andCount = 0;
         int EXTEND_ASCII_LIMIT = 255;

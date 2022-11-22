@@ -1,14 +1,18 @@
 package org.simplehttp.server.core.parser;
 
+import lombok.extern.log4j.Log4j2;
 import org.simplehttp.server.core.SimpleHttpServer;
 import org.simplehttp.common.enums.FixedHttpHeader;
 import org.simplehttp.common.enums.MIME;
-import org.simplehttp.server.pojo.protocol.HttpResponse;
+import org.simplehttp.server.enums.StatusCode;
+import org.simplehttp.server.enums.pojo.protocol.HttpResponse;
+import org.simplehttp.server.exception.ServerSnapShotException;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 
+@Log4j2
 public class HttpResponseBuilder {
 
     // 构建请求并将请求写入到 Socket 中
@@ -51,5 +55,15 @@ public class HttpResponseBuilder {
                 outputStream.write(bytes);
             }
         }
+    }
+
+    // 响应失败的请求
+    public void failAndBuild(OutputStream outputStream, ServerSnapShotException exception) throws IOException {
+        StatusCode code = exception.getCode();
+        String url = exception.getUrl();
+        String requestMethod = exception.getRequestMethod();
+        log.error("请求处理失败\n请求URL: {}\n,请求方法: {}\n响应: {}, {}", url, code, code.getCode(), code.getStatus());
+        String res = "HTTP1.0" + " " +  code.getCode() + " " + code.getStatus();
+        outputStream.write(res.getBytes());
     }
 }

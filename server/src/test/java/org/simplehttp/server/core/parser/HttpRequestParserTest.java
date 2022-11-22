@@ -4,7 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.simplehttp.server.core.SimpleHttpServer;
 import org.simplehttp.server.core.context.ServerContext;
-import org.simplehttp.server.pojo.protocol.HttpRequest;
+import org.simplehttp.server.enums.pojo.protocol.HttpRequest;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;

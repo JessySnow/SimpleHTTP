@@ -2,13 +2,13 @@ package org.simplehttp.server.core.parser;
 
 import lombok.extern.log4j.Log4j2;
 import org.simplehttp.common.core.URLWrapper;
-import org.simplehttp.server.core.context.BaseServerContext;
 import org.simplehttp.common.enums.FixedHttpHeader;
 import org.simplehttp.common.enums.MIME;
 import org.simplehttp.common.enums.RequestMethod;
-import org.simplehttp.server.pojo.protocol.HttpBody;
-import org.simplehttp.server.pojo.protocol.HttpHeader;
-import org.simplehttp.server.pojo.protocol.HttpRequest;
+import org.simplehttp.server.core.context.BaseServerContext;
+import org.simplehttp.server.enums.pojo.protocol.HttpBody;
+import org.simplehttp.server.enums.pojo.protocol.HttpHeader;
+import org.simplehttp.server.enums.pojo.protocol.HttpRequest;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -64,7 +64,7 @@ public class HttpRequestParser {
         }
         buffer.clear();
 
-        //  TODO Fix
+        //  TODO 去除字符串拼接
         String protocol = context.getServer().protocol;
         String host = context.getServer().getHostAlias();
         int port = context.getServer().getPort();

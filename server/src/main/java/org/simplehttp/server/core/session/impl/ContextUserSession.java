@@ -1,7 +1,7 @@
 package org.simplehttp.server.core.session.impl;
 
 import org.simplehttp.server.core.session.UserSession;
-import org.simplehttp.server.pojo.biz.User;
+import org.simplehttp.server.enums.pojo.biz.User;
 
 import java.util.Date;
 import java.util.Map;

@@ -1,4 +1,4 @@
-package org.simplehttp.server.pojo.protocol;
+package org.simplehttp.server.enums.pojo.protocol;
 
 import lombok.Getter;
 

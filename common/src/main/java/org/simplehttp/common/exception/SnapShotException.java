@@ -8,7 +8,7 @@ import lombok.Data;
 @Data
 public class SnapShotException extends Exception{
     // 请求 URL
-    private String url;
+    protected String url;
     // 请求方法
-    private String requestMethod;
+    protected String requestMethod;
 }

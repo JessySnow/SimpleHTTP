@@ -1,7 +1,6 @@
 package org.simplehttp.server.core.session;
 
-import org.simplehttp.server.core.session.Session;
-import org.simplehttp.server.pojo.biz.User;
+import org.simplehttp.server.enums.pojo.biz.User;
 
 public interface UserSession extends Session<String, User> {
     @Override

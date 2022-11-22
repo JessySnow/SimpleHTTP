@@ -1,4 +1,4 @@
-package org.simplehttp.server.pojo.biz;
+package org.simplehttp.server.enums.pojo.biz;
 
 import java.util.Date;
 
