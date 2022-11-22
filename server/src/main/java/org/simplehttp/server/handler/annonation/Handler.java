@@ -1,6 +1,6 @@
 package org.simplehttp.server.handler.annonation;
 
-import org.simplehttp.server.enums.RequestMethod;
+import org.simplehttp.enums.RequestMethod;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

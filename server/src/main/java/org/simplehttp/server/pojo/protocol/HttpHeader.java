@@ -1,7 +1,7 @@
 package org.simplehttp.server.pojo.protocol;
 
-import org.simplehttp.server.enums.FixedHttpHeader;
-import org.simplehttp.server.enums.MIME;
+import org.simplehttp.enums.FixedHttpHeader;
+import org.simplehttp.enums.MIME;
 import org.simplehttp.server.enums.StatusCode;
 
 import java.util.HashMap;

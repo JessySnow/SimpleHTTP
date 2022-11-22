@@ -1,4 +1,4 @@
-package org.simplehttp.server.enums;
+package org.simplehttp.enums;
 
 /**
  * 支持的请求类型

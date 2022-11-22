@@ -1,6 +1,6 @@
 package org.simplehttp.server.pojo.protocol;
 
-import org.simplehttp.server.enums.MIME;
+import org.simplehttp.enums.MIME;
 
 import java.util.HashMap;
 
