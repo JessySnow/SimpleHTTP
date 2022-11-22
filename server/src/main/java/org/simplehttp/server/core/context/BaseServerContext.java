@@ -1,7 +1,6 @@
 package org.simplehttp.server.core.context;
 
 import lombok.Getter;
-import lombok.Setter;
 import lombok.experimental.Accessors;
 import lombok.extern.log4j.Log4j2;
 import org.simplehttp.server.core.SimpleHttpServer;
@@ -12,16 +11,12 @@ import org.simplehttp.server.core.session.Session;
 import org.simplehttp.server.enums.RequestMethod;
 import org.simplehttp.server.handler.HttpHandler;
 import org.simplehttp.server.handler.annonation.Handler;
-import org.simplehttp.server.pojo.protocol.HttpRequest;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 
 /**
  * 基础服务器上下文，提供 HTTP 服务器最核心的功能管理，通过继承这个类来拓展额外的功能
- * @see ServerContext
- * 1. 请求解析
- * 2. 请求路由
  */
 @Log4j2
 public class BaseServerContext {
@@ -47,7 +42,6 @@ public class BaseServerContext {
     protected HttpResponseBuilder responseBuilder = new HttpResponseBuilder();
     // URL 解析器
     @Getter
-    @Setter
     @Accessors(chain = true)
     protected URLParser urlParser = new URLParser();
 
