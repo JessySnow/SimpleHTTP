@@ -8,6 +8,7 @@ import org.simplehttp.server.enums.RequestMethod;
 import org.simplehttp.server.pojo.protocol.HttpBody;
 import org.simplehttp.server.pojo.protocol.HttpHeader;
 import org.simplehttp.server.pojo.protocol.HttpRequest;
+import org.simplehttp.server.pojo.protocol.URLWrapper;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -80,8 +81,8 @@ public class HttpRequestParser {
             log.info("不支持的 HTTP 请求方法: " + method);
             throw new RuntimeException("不支持的 HTTP 请求方法: " + method);
         }
-//        URLWrapper urlWrapper = context.getUrlParser().parse(context.server, queryPath);
-//        request.setUrlWrapper(urlWrapper);
+        URLWrapper urlWrapper = context.getUrlParser().parse(context.server, queryPath);
+        request.setUrlWrapper(urlWrapper);
 
         // 处理头部
         String key = null, value;
