@@ -1,8 +1,8 @@
 package org.simplehttp.server.core.parser;
 
 import org.simplehttp.server.core.SimpleHttpServer;
-import org.simplehttp.enums.FixedHttpHeader;
-import org.simplehttp.enums.MIME;
+import org.simplehttp.common.enums.FixedHttpHeader;
+import org.simplehttp.common.enums.MIME;
 import org.simplehttp.server.pojo.protocol.HttpResponse;
 
 import java.io.IOException;

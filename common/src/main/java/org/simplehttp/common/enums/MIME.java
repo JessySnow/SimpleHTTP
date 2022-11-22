@@ -1,4 +1,4 @@
-package org.simplehttp.enums;
+package org.simplehttp.common.enums;
 
 /**
  * 支持的 MIME 类型

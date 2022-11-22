@@ -2,7 +2,7 @@ package org.simplehttp.server.core;
 
 import lombok.extern.log4j.Log4j2;
 import org.simplehttp.server.core.context.BaseServerContext;
-import org.simplehttp.enums.RequestMethod;
+import org.simplehttp.common.enums.RequestMethod;
 import org.simplehttp.server.handler.HttpHandler;
 import org.simplehttp.server.pojo.protocol.HttpRequest;
 import org.simplehttp.server.pojo.protocol.HttpResponse;

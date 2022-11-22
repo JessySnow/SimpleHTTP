@@ -1,7 +1,7 @@
 package org.simplehttp.server.handler.impl;
 
-import org.simplehttp.enums.MIME;
-import org.simplehttp.enums.RequestMethod;
+import org.simplehttp.common.enums.MIME;
+import org.simplehttp.common.enums.RequestMethod;
 import org.simplehttp.server.enums.StatusCode;
 import org.simplehttp.server.handler.HttpHandler;
 import org.simplehttp.server.handler.annonation.Handler;

@@ -8,7 +8,7 @@ import org.simplehttp.server.core.parser.HttpRequestParser;
 import org.simplehttp.server.core.parser.HttpResponseBuilder;
 import org.simplehttp.server.core.parser.URLParser;
 import org.simplehttp.server.core.session.Session;
-import org.simplehttp.enums.RequestMethod;
+import org.simplehttp.common.enums.RequestMethod;
 import org.simplehttp.server.handler.HttpHandler;
 import org.simplehttp.server.handler.annonation.Handler;
 
