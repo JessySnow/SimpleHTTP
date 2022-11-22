@@ -10,15 +10,23 @@ import org.simplehttp.server.pojo.protocol.HttpHeader;
 import org.simplehttp.server.pojo.protocol.HttpRequest;
 import org.simplehttp.server.pojo.protocol.URLWrapper;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 
+/**
+ * 解析 Socket 流
+ */
 @Log4j2
 public class HttpRequestParser {
     private static final byte NEWLINE = '\n';
     private static final byte ENTER = '\r';
+    private static final byte SPACE = ' ';
 
     public HttpRequest parse(BaseServerContext context, InputStream inputStream) throws IOException, RuntimeException {
         HttpRequest request = new HttpRequest();
@@ -27,19 +35,31 @@ public class HttpRequestParser {
 
         byte pre = -1;
         byte cur;
-        // 头部构造器
+
+        // 预分配缓冲区，解析 HTTP 请求头
+        ByteBuffer buffer = ByteBuffer.allocate(512);
         StringBuilder temp = new StringBuilder();
-
         // 处理首行
+        String method = null;
+        String queryPath = null;
         while ((cur = (byte) inputStream.read()) != NEWLINE){
-            temp.append((char) cur);
+            if(SPACE == cur){
+                buffer.flip();
+                byte[] bytes = new byte[buffer.limit()];
+                buffer.get(bytes, 0, bytes.length);
+                if(method == null){
+                    method = new String(bytes);
+                }else if(queryPath == null){
+                    queryPath = new String(bytes);
+                }
+                buffer.clear();
+            }
+            else {
+                buffer.put(cur);
+            }
         }
-        String firstLineOfHeader = temp.toString();
-        String[] headerParams = firstLineOfHeader.split("\s");
-        String method = headerParams[0].toUpperCase();
-        String queryPath = headerParams[1];
 
-//         兼容单元测试和API测试 TODO release 移除
+        //兼容单元测试和API测试 TODO release 移除
         if(!queryPath.startsWith("http")){
             String protocol = context.getServer().protocol;
             String host = context.getServer().getHostAlias();
@@ -48,8 +68,6 @@ public class HttpRequestParser {
             queryPath = protocol + "://" + host + ":" + port + queryPath;
         }
 
-        // 协议字段不处理，仅支持 HTTP1.0 短连接
-        String ignoredProtocol = headerParams[2].toUpperCase();
         try{
             RequestMethod m = Enum.valueOf(RequestMethod.class, method);
             // 当是一个 POST 请求时，才构造 HTTP 请求体对象
