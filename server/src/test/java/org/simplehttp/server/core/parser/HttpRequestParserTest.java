@@ -18,17 +18,16 @@ class HttpRequestParserTest {
     @BeforeEach
     public void setUp(){
         this.context = new ServerContext();
-        context.setUrlParser(new URLParser());
         context.server = new SimpleHttpServer().bindContext(context)
                 .setPort(9090)
                 .setContextPath("/api")
                 .setHostAlias("localhost");
         getHeaderStream = new ByteArrayInputStream((
-                "GET http://127.0.0.1:7890/api?id=1 HTTP/1.1\n" +
+                "GET /api?id=1 HTTP/1.1\n" +
                         "User-Agent:Fiddler Everywhere\n" +
                         "Host:127.0.0.1:7890\r\n")
                 .getBytes());
-        postHeaderStream_plain_text = new ByteArrayInputStream(("POST http://127.0.0.1:7890/api/index.jsp HTTP/1.1\n" +
+        postHeaderStream_plain_text = new ByteArrayInputStream(("POST /api/index.jsp HTTP/1.1\n" +
                 "User-Agent:Fiddler Everywhere\r\n" +
                 "Host:127.0.0.1:7890\r\n" +
                 "Content-Type:text/plain\r\n" +
