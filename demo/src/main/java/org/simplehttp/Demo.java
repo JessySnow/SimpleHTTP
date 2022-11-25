@@ -2,8 +2,8 @@ package org.simplehttp;
 
 import org.simplehttp.server.core.SimpleHttpServer;
 import org.simplehttp.server.core.context.BaseServerContext;
-import org.simplehttp.server.handler.impl.EchoHandler;
-import org.simplehttp.server.handler.impl.PathParamHandler;
+import org.simplehttp.handler.impl.EchoHandler;
+import org.simplehttp.handler.impl.PathParamHandler;
 
 public class Demo {
     public static void main(String[] args) {

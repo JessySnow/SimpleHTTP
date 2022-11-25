@@ -1,4 +1,4 @@
-package org.simplehttp.server.handler.impl;
+package org.simplehttp.handler.impl;
 
 import org.simplehttp.common.enums.MIME;
 import org.simplehttp.common.enums.RequestMethod;
