@@ -21,6 +21,14 @@ import java.util.concurrent.Executors;
 @Accessors(chain = true)
 @Log4j2
 public class SimpleHttpServer {
+    private static final String ASCII_ART_BANNER = "\n   ___      _              _ __     _             _  _    _____   _____     ___  \n" +
+            "  / __|    (_)    _ __    | '_ \\   | |     ___   | || |  |_   _| |_   _|   | _ \\ \n" +
+            "  \\__ \\    | |   | '  \\   | .__/   | |    / -_)  | __ |    | |     | |     |  _/ \n" +
+            "  |___/   _|_|_  |_|_|_|  |_|__   _|_|_   \\___|  |_||_|   _|_|_   _|_|_   _|_|_  \n" +
+            "_|\"\"\"\"\"|_|\"\"\"\"\"|_|\"\"\"\"\"|_|\"\"\"\"\"|_|\"\"\"\"\"|_|\"\"\"\"\"|_|\"\"\"\"\"|_|\"\"\"\"\"|_|\"\"\"\"\"|_| \"\"\" | \n" +
+            "\"`-0-0-'\"`-0-0-'\"`-0-0-'\"`-0-0-'\"`-0-0-'\"`-0-0-'\"`-0-0-'\"`-0-0-'\"`-0-0-'\"`-0-0-' \n" +
+            "\n";
+
     // 服务器的名字，扩展ASCII 字符范围内
     public static String Server = "MySimpleHttpServer";
     // 协议名称，暂时没用
@@ -83,6 +91,7 @@ public class SimpleHttpServer {
         watcher.setDaemon(true);
         watcher.start();
 
+        log.info(ASCII_ART_BANNER);
         log.info("服务器协议: {}",protocol);
         log.info("服务器别名: {}",hostAlias);
         log.info("服务器端口: {}",port);
