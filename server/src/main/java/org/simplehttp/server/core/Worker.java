@@ -1,13 +1,12 @@
 package org.simplehttp.server.core;
 
 import lombok.extern.log4j.Log4j2;
-import org.simplehttp.server.core.context.BaseServerContext;
 import org.simplehttp.common.enums.RequestMethod;
-import org.simplehttp.server.enums.StatusCode;
-import org.simplehttp.server.exception.ServerSnapShotException;
-import org.simplehttp.server.handler.HttpHandler;
+import org.simplehttp.server.core.context.BaseServerContext;
 import org.simplehttp.server.enums.pojo.protocol.HttpRequest;
 import org.simplehttp.server.enums.pojo.protocol.HttpResponse;
+import org.simplehttp.server.exception.ServerSnapShotException;
+import org.simplehttp.server.handler.HttpHandler;
 
 import java.io.Closeable;
 import java.io.IOException;
@@ -44,7 +43,7 @@ public class Worker implements Runnable{
 
             String routePath = request.getUrlWrapper().getUrl().getPath();
             RequestMethod method = request.getBody() == null ? RequestMethod.GET : RequestMethod.POST;
-            HttpHandler handler = serverContext.getHandler(method, routePath);
+            HttpHandler handler = serverContext.route(method, routePath);
             HttpResponse response = handler.handle(request);
 
             // 处理 Response

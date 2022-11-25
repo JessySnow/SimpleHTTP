@@ -3,12 +3,14 @@ package org.simplehttp.server.core.context;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 import lombok.extern.log4j.Log4j2;
+import org.simplehttp.common.enums.RequestMethod;
 import org.simplehttp.server.core.SimpleHttpServer;
 import org.simplehttp.server.core.parser.HttpRequestParser;
 import org.simplehttp.server.core.parser.HttpResponseBuilder;
 import org.simplehttp.server.core.parser.URLParser;
+import org.simplehttp.server.core.route.CGIRouter;
+import org.simplehttp.server.core.route.Router;
 import org.simplehttp.server.core.session.Session;
-import org.simplehttp.common.enums.RequestMethod;
 import org.simplehttp.server.handler.HttpHandler;
 import org.simplehttp.server.handler.annonation.Handler;
 
@@ -24,11 +26,11 @@ public class BaseServerContext {
     // 绑定的服务器实例引用
     public SimpleHttpServer server = null;
 
-    // 请求暂存，暂时没用到
-
     // 缓存的无状态处理器，在类绑定到上下文时被初始化
     // 处理器集合，一级路由按照请求方法进行
+    @Getter
     protected HashMap<String, HttpHandler> getHttpHandlerMap = new HashMap<>();
+    @Getter
     protected HashMap<String, HttpHandler> postHttpHandlerMap = new HashMap<>();
 
     // 只读 Map，在服务器启动时进行初始化，后续只会进行读操作从上下文拿 Session 实现功能，启动后不要向这个 SessionMap 中写内容
@@ -44,6 +46,8 @@ public class BaseServerContext {
     @Getter
     @Accessors(chain = true)
     protected URLParser urlParser = new URLParser();
+    // CGI风格路径路由器
+    protected Router router = new CGIRouter(this);
 
 
     // 绑定一个服务器
@@ -83,10 +87,11 @@ public class BaseServerContext {
         return this;
     }
 
-    public HttpHandler getHandler(RequestMethod method, String routePath){
-        if (method.equals(RequestMethod.GET)){
-            return getHttpHandlerMap.get(routePath);
-        }
-        return this.postHttpHandlerMap.get(routePath);
+    // TODO 将所有的方法调用改为这种形式，BaseContext 对于工作线程只暴露服务，不暴露组件
+    public HttpHandler route(RequestMethod method, String routePath){
+        return this.router.route(method,routePath);
     }
+
+    // TODO 将工作线程的工作流程从线程内部移动到服务器的上下文中
+    public void doRequest(){;}
 }
