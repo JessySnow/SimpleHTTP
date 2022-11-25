@@ -67,7 +67,7 @@ public class HttpResponseBuilder {
                                                                                         code.getCode(),
                                                                                         code.getStatus());
         String res = "HTTP/1.0 " + code.getCode() + " " + code.getStatus() + " \r\n"
-                + "Server: SimpleHttp+\r\n"
+                + "Server: SimpleHttp\r\n"
                 + "Content_Type: text/html\r\n\n"
                 +"<html> "
                 + "<head><title>" + code.getCode() + code.getStatus() +  "</title></head>"
