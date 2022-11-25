@@ -2,6 +2,7 @@ package org.simplehttp.server.core.parser;
 
 import org.simplehttp.common.core.URLWrapper;
 import org.simplehttp.server.core.SimpleHttpServer;
+import org.simplehttp.server.enums.StatusCode;
 import org.simplehttp.server.exception.ServerSnapShotException;
 
 import java.net.MalformedURLException;
@@ -23,11 +24,13 @@ public class URLParser {
             checkPath(server, url);
             return new URLWrapper(url);
         } catch (MalformedURLException e) {
+            throw new ServerSnapShotException(e, urlStr, "UN_KNOWN", StatusCode.BAD_REQUEST);
         }
     }
 
-    private void checkPath(SimpleHttpServer server, URL url){
+    private void checkPath(SimpleHttpServer server, URL url) throws ServerSnapShotException{
         if(!url.getPath().startsWith(server.getContextPath())){
+            throw new ServerSnapShotException(url.toString(), "UN_KNOWN", StatusCode.NOT_FOUND);
         }
     }
 }

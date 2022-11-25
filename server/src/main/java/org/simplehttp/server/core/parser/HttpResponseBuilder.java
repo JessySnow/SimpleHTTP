@@ -62,8 +62,17 @@ public class HttpResponseBuilder {
         StatusCode code = exception.getCode();
         String url = exception.getUrl();
         String requestMethod = exception.getRequestMethod();
-        log.error("请求处理失败\n请求URL: {}\n,请求方法: {}\n响应: {}, {}", url, code, code.getCode(), code.getStatus());
-        String res = "HTTP1.0" + " " +  code.getCode() + " " + code.getStatus();
+        log.error("请求处理失败\n\t请求URL/PATH: {}\n\t请求方法: {}\n\t响应: {}, {}", url,
+                                                                                        requestMethod,
+                                                                                        code.getCode(),
+                                                                                        code.getStatus());
+        String res = "HTTP/1.0 " + code.getCode() + " " + code.getStatus() + " \r\n"
+                + "Server: SimpleHttp+\r\n"
+                + "Content_Type: text/html\r\n\n"
+                +"<html> "
+                + "<head><title>" + code.getCode() + code.getStatus() +  "</title></head>"
+                + "<body><center><h1>" + code.getCode() + " " + code.getStatus() + "</h1></center></body>"
+                + "</html><hr><center>SimpleHttp</center>";
         outputStream.write(res.getBytes());
     }
 }

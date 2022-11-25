@@ -6,9 +6,11 @@ import org.simplehttp.common.enums.FixedHttpHeader;
 import org.simplehttp.common.enums.MIME;
 import org.simplehttp.common.enums.RequestMethod;
 import org.simplehttp.server.core.context.BaseServerContext;
+import org.simplehttp.server.enums.StatusCode;
 import org.simplehttp.server.enums.pojo.protocol.HttpBody;
 import org.simplehttp.server.enums.pojo.protocol.HttpHeader;
 import org.simplehttp.server.enums.pojo.protocol.HttpRequest;
+import org.simplehttp.server.exception.ServerSnapShotException;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -25,12 +27,12 @@ import java.util.Optional;
  */
 @Log4j2
 public class HttpRequestParser {
-    private static final byte NEWLINE = '\n';
-    private static final byte ENTER = '\r';
+    private static final byte LF = '\n';
+    private static final byte CR = '\r';
     private static final byte SPACE = ' ';
     private static final byte COLON = ':';
 
-    public HttpRequest parse(BaseServerContext context, InputStream inputStream) throws IOException, RuntimeException {
+    public HttpRequest parse(BaseServerContext context, InputStream inputStream) throws IOException, ServerSnapShotException {
         HttpRequest request = new HttpRequest();
         HttpHeader header = new HttpHeader();
         HttpBody body = null;
@@ -44,7 +46,7 @@ public class HttpRequestParser {
         String method = null;
         String queryPath = null;
         String protocolVersion = null;
-        while ((cur = (byte) inputStream.read()) != NEWLINE){
+        while ((cur = (byte) inputStream.read()) != LF){
             if(SPACE == cur){
                 buffer.flip();
                 byte[] bytes = new byte[buffer.limit()];
@@ -69,6 +71,9 @@ public class HttpRequestParser {
         String host = context.getServer().getHostAlias();
         int port = context.getServer().getPort();
         queryPath = protocol + "://" + host + ":" + port + queryPath;
+        // 构造一个完整的请求 URL，并进行包装
+        URLWrapper urlWrapper = context.getUrlParser().parse(context.server, queryPath);
+        request.setUrlWrapper(urlWrapper);
 
         // 请求方法处理，如果遇到不支持的请求方法，快速失败
         try{
@@ -78,13 +83,10 @@ public class HttpRequestParser {
                 body = new HttpBody();
             }
         }catch (RuntimeException e){
-            log.info("不支持的 HTTP 请求方法: " + method);
-            throw new RuntimeException("不支持的 HTTP 请求方法: " + method);
+            throw new ServerSnapShotException(urlWrapper.getUrl().toString(), method, StatusCode.NOT_FOUND);
         }
-        URLWrapper urlWrapper = context.getUrlParser().parse(context.server, queryPath);
-        request.setUrlWrapper(urlWrapper);
 
-        // 处理头部
+        //TODO 处理头部，头部的普通的换行符使用 CRLF，这里需要兼容 LF 换行符
         String key = null, value;
         while ((cur = (byte) inputStream.read()) != -1){
             // 键值对的冒号分割
@@ -94,16 +96,16 @@ public class HttpRequestParser {
                 buffer.get(bytes);
                 key = new String(bytes);
                 buffer.clear();
-            } else if(cur == NEWLINE || cur == ENTER){
+            } else if(cur == LF || cur == CR){
                 // 普通的换行，pre = '/r'
-                if(pre == ENTER){
+                if(pre == CR){
                     buffer.flip();
                     byte[] bytes = new byte[buffer.limit()];
                     buffer.get(bytes);
                     value = new String(bytes);
                     buffer.clear();
                     header.addHeaderPair(key, value);
-                } else if(pre == NEWLINE){
+                } else if(pre == LF){
                     // 头、体 分界处，连续的两个换行符，直接退出循环
                     break;
                 }

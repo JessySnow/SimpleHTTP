@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.simplehttp.server.core.SimpleHttpServer;
 import org.simplehttp.server.core.context.ServerContext;
 import org.simplehttp.server.enums.pojo.protocol.HttpRequest;
+import org.simplehttp.server.exception.ServerSnapShotException;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -37,7 +38,7 @@ class HttpRequestParserTest {
     }
 
     @Test
-    public void testParseGet() throws IOException {
+    public void testParseGet() throws IOException, ServerSnapShotException {
         HttpRequest request = new HttpRequestParser().parse(context, getHeaderStream);
     }
 
@@ -46,7 +47,7 @@ class HttpRequestParserTest {
      * 媒体类型：纯文本
      */
     @Test
-    public void testParsePost() throws IOException{
+    public void testParsePost() throws IOException, ServerSnapShotException {
         HttpRequest request = new HttpRequestParser().parse(context, postHeaderStream_plain_text);
     }
 }

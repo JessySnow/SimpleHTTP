@@ -3,6 +3,7 @@ package org.simplehttp.server.core;
 import lombok.extern.log4j.Log4j2;
 import org.simplehttp.common.enums.RequestMethod;
 import org.simplehttp.server.core.context.BaseServerContext;
+import org.simplehttp.server.enums.StatusCode;
 import org.simplehttp.server.enums.pojo.protocol.HttpRequest;
 import org.simplehttp.server.enums.pojo.protocol.HttpResponse;
 import org.simplehttp.server.exception.ServerSnapShotException;
@@ -44,17 +45,23 @@ public class Worker implements Runnable{
             String routePath = request.getUrlWrapper().getUrl().getPath();
             RequestMethod method = request.getBody() == null ? RequestMethod.GET : RequestMethod.POST;
             HttpHandler handler = serverContext.route(method, routePath);
-            HttpResponse response = handler.handle(request);
-
-            // 处理 Response
-            serverContext.getResponseBuilder().buildAndWrite(socketOut, response);
+            if(handler != null) {
+                HttpResponse response = handler.handle(request);
+                // 处理 Response
+                serverContext.getResponseBuilder().buildAndWrite(socketOut, response);
+            }else {
+                log.error("请求路径错误，未知的请求路径: {}", routePath);
+                serverContext.getResponseBuilder().failAndBuild(socketOut, new ServerSnapShotException(routePath,
+                        method.name(),
+                        StatusCode.NOT_FOUND));
+            }
         } catch (IOException e) {
             log.error("IO异常");
         }catch(ServerSnapShotException e){
             try {
                 server.getServerContext().getResponseBuilder().failAndBuild(socketOut, e);
             } catch (IOException ignored) {}
-        } catch (RuntimeException e){
+        }catch (RuntimeException e){
             log.error("运行时异常,{}",e.getMessage());
         }finally {
             // Socket 资源清理
