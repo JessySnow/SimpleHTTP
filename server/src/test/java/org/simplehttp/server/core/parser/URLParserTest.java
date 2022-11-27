@@ -4,6 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.simplehttp.common.core.URLWrapper;
 import org.simplehttp.server.core.SimpleHttpServer;
+import org.simplehttp.server.exception.ServerSnapShotException;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -36,11 +37,11 @@ class URLParserTest {
 
     @Test
     public void testParseBadContext(){
-        assertThrows(RuntimeException.class, () -> new URLParser().parse(simpleHttpServer, "http://127.0.0.1:8080/context/api?id=1"));
+        assertThrows(ServerSnapShotException.class, () -> new URLParser().parse(simpleHttpServer, "http://127.0.0.1:8080/context/api?id=1"));
     }
 
     @Test
-    public void testParseURL(){
+    public void testParseURL() throws ServerSnapShotException {
         simpleHttpServer.setContextPath("/context");
         URLWrapper parse = new URLParser().parse(simpleHttpServer, "http://127.0.0.1:8080/context/api?id=1");
         assertNotNull(parse);
