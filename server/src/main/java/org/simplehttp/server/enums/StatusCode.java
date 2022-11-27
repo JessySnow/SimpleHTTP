@@ -12,7 +12,8 @@ public enum StatusCode {
     OK("OK",200),
     NOT_FOUND("Not Found", 404),
     BAD_REQUEST("Bad Request", 400),
-    METHOD_NOT_ALLOWED("Method Not Allowed", 405);
+    METHOD_NOT_ALLOWED("Method Not Allowed", 405),
+    INTERNAL_SERVER_ERROR("Internal Server Error", 500);
     @Getter
     private final String status;
     @Getter

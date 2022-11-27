@@ -5,6 +5,9 @@ import org.simplehttp.server.core.context.BaseServerContext;
 import org.simplehttp.handler.impl.EchoHandler;
 import org.simplehttp.handler.impl.PathParamHandler;
 
+/**
+ * 简单的静态服务器示例
+ */
 public class Demo {
     public static void main(String[] args) {
         // Demo 服务器启动，绑定端口在 9990

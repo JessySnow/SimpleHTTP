@@ -2,13 +2,12 @@ package org.simplehttp.server.core;
 
 import lombok.extern.log4j.Log4j2;
 
-import java.io.Closeable;
-import java.io.IOException;
 import java.net.Socket;
 import java.util.function.Function;
 
 /**
- * 工作线程，负责每一个到来请求的处理
+ * 工作线程，只负责对请求逻辑的调用
+ * 不要在这里写任何的业务逻辑
  */
 @Log4j2
 public class Worker implements Runnable{
@@ -18,13 +17,6 @@ public class Worker implements Runnable{
         this.logic.apply(socketIn);
     }
 
-    private void cleanUp(Closeable ... objects){
-        for (Closeable o : objects){
-            try {
-                o.close();
-            } catch (IOException ignored) {}
-        }
-    }
 
     private Function<Socket, Void> logic;
     private Socket socketIn;

@@ -1,7 +1,6 @@
 package org.simplehttp.server.core.context;
 
 import lombok.Getter;
-import lombok.experimental.Accessors;
 import lombok.extern.log4j.Log4j2;
 import org.simplehttp.common.enums.RequestMethod;
 import org.simplehttp.server.core.SimpleHttpServer;
@@ -11,9 +10,17 @@ import org.simplehttp.server.core.parser.URLParser;
 import org.simplehttp.server.core.route.CGIRouter;
 import org.simplehttp.server.core.route.Router;
 import org.simplehttp.server.core.session.Session;
+import org.simplehttp.server.enums.StatusCode;
+import org.simplehttp.server.enums.pojo.protocol.HttpRequest;
+import org.simplehttp.server.enums.pojo.protocol.HttpResponse;
+import org.simplehttp.server.exception.ServerSnapShotException;
 import org.simplehttp.server.handler.HttpHandler;
 import org.simplehttp.server.handler.annonation.Handler;
 
+import java.io.Closeable;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.net.Socket;
 import java.util.HashMap;
@@ -40,14 +47,11 @@ public class BaseServerContext implements Function<Socket, Void> {
     protected final HashMap<Class<? extends Session<?,?>>, Session<?,?>> sessionHashMap = new HashMap<>();
 
     // Http 请求解析器
-    @Getter
     protected HttpRequestParser requestParser = new HttpRequestParser();
     // Http 响应构造器
-    @Getter
     protected HttpResponseBuilder responseBuilder = new HttpResponseBuilder();
     // URL 解析器
     @Getter
-    @Accessors(chain = true)
     protected URLParser urlParser = new URLParser();
     // CGI风格路径路由器
     protected Router router = new CGIRouter(this);
@@ -92,14 +96,66 @@ public class BaseServerContext implements Function<Socket, Void> {
 
     @Override
     public Void apply(Socket socket) {
+        InputStream socketIn = null;
+        OutputStream socketOut = null;
+        HttpRequest request = null;
+        String routePath = null;
+        RequestMethod method = null;
+        try {
+            socketIn = socket.getInputStream();
+            socketOut = socket.getOutputStream();
+            request = this.requestParser.parse(this, socketIn);
+            routePath = request.getUrlWrapper().getUrl().getPath();
+            method = request.getBody() == null ? RequestMethod.GET : RequestMethod.POST;
+            HttpHandler handler = route(method, routePath);
+            HttpResponse response = handler.handle(request);
+            // 处理 Response
+            responseBuilder.buildAndWrite(socketOut, response);
+        } catch (IOException e) {
+            log.error("IO异常");
+            if(socketOut != null) {
+                try {
+                    responseBuilder.failAndBuild(socketOut, new ServerSnapShotException(e
+                            , routePath, method.name(), StatusCode.INTERNAL_SERVER_ERROR));
+                } catch (IOException ex) {
+                    log.error("客户端IO异常，连接可能已被客户端提前关闭");
+                }
+            }
+        }catch(ServerSnapShotException e){
+            try {
+                responseBuilder.failAndBuild(socketOut, e);
+            } catch (IOException ignored) {
+                log.error("客户端IO异常，连接可能已被客户端提前关闭");
+            }
+        }catch (RuntimeException e){
+            log.error("运行时异常,{}",e.getMessage());
+            try {
+                responseBuilder.failAndBuild(socketOut, new ServerSnapShotException(e
+                        , routePath, method.name(), StatusCode.INTERNAL_SERVER_ERROR));
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+        }finally {
+            // Socket 资源清理
+            cleanUp(socketIn, socketOut, socket);
+        }
         return null;
     }
 
-    // TODO 将所有的方法调用改为这种形式，BaseContext 对于工作线程只暴露服务，不暴露组件
-    public HttpHandler route(RequestMethod method, String routePath){
-        return this.router.route(method,routePath);
+    private void cleanUp(Closeable... objects){
+        for (Closeable o : objects){
+            try {
+                o.close();
+            } catch (IOException ignored) {}
+        }
     }
 
-    // TODO 将工作线程的工作流程从线程内部移动到服务器的上下文中
-    public void doRequest(){;}
+    public HttpHandler route(RequestMethod method, String routePath) throws ServerSnapShotException{
+        HttpHandler handler = router.route(method, routePath);
+        if(null == handler){
+            log.error("请求路径错误，未知的请求路径: {}", routePath);
+            throw new ServerSnapShotException(routePath, method.name(), StatusCode.NOT_FOUND);
+        }
+        return handler;
+    }
 }
