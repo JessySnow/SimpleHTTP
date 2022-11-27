@@ -15,13 +15,16 @@ import org.simplehttp.server.handler.HttpHandler;
 import org.simplehttp.server.handler.annonation.Handler;
 
 import java.lang.reflect.InvocationTargetException;
+import java.net.Socket;
 import java.util.HashMap;
+import java.util.function.Function;
 
 /**
  * 基础服务器上下文，提供 HTTP 服务器最核心的功能管理，通过继承这个类来拓展额外的功能
  */
 @Log4j2
-public class BaseServerContext {
+public class BaseServerContext implements Function<Socket, Void> {
+
     @Getter
     // 绑定的服务器实例引用
     public SimpleHttpServer server = null;
@@ -85,6 +88,11 @@ public class BaseServerContext {
             log.error("实例化处理器失败，请检查处理器注解{}", clazz.getName());
         }
         return this;
+    }
+
+    @Override
+    public Void apply(Socket socket) {
+        return null;
     }
 
     // TODO 将所有的方法调用改为这种形式，BaseContext 对于工作线程只暴露服务，不暴露组件

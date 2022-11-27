@@ -102,8 +102,18 @@ public class SimpleHttpServer {
             serverSocket = new ServerSocket(this.port);
             while (!shutDown) {
                 Socket accept = serverSocket.accept();
-                // 请求处理
-                fixedExecutorPool.execute(new Worker(this, accept));
+                // 通过框架处理请求
+                fixedExecutorPool.execute(new Worker(accept, this.serverContext));
+                /**
+                 * 快速修改服务器的处理逻辑，也可以写在这里，示例代码如下
+                 */
+//                fixedExecutorPool.execute(new Worker(accept, new BaseServerContext(){
+//                    @Override
+//                    public Void apply(Socket socket) {
+//                        // 你要对 socket 进行的操作
+//                        // Do Some biz
+//                    }
+//                }));
             }
         } catch (IOException e) {
             if(!shutDown) {

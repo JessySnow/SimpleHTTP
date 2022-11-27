@@ -1,19 +1,11 @@
 package org.simplehttp.server.core;
 
 import lombok.extern.log4j.Log4j2;
-import org.simplehttp.common.enums.RequestMethod;
-import org.simplehttp.server.core.context.BaseServerContext;
-import org.simplehttp.server.enums.StatusCode;
-import org.simplehttp.server.enums.pojo.protocol.HttpRequest;
-import org.simplehttp.server.enums.pojo.protocol.HttpResponse;
-import org.simplehttp.server.exception.ServerSnapShotException;
-import org.simplehttp.server.handler.HttpHandler;
 
 import java.io.Closeable;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.Socket;
+import java.util.function.Function;
 
 /**
  * 工作线程，负责每一个到来请求的处理
@@ -21,52 +13,9 @@ import java.net.Socket;
 @Log4j2
 public class Worker implements Runnable{
 
-    // 获取启动的服务器的实例的引用
-    private final SimpleHttpServer server;
-    // 需要处理的请求 Socket 引用
-    private final Socket socket;
-
-    public Worker(SimpleHttpServer server, Socket socket){
-        this.server = server;
-        this.socket = socket;
-    }
-
     @Override
     public void run() {
-        InputStream socketIn = null;
-        OutputStream socketOut = null;
-        try {
-            socketIn = socket.getInputStream();
-            socketOut = socket.getOutputStream();
-            BaseServerContext serverContext = server.getServerContext();
-            HttpRequest request = serverContext.getRequestParser().parse(serverContext, socketIn);
-
-
-            String routePath = request.getUrlWrapper().getUrl().getPath();
-            RequestMethod method = request.getBody() == null ? RequestMethod.GET : RequestMethod.POST;
-            HttpHandler handler = serverContext.route(method, routePath);
-            if(handler != null) {
-                HttpResponse response = handler.handle(request);
-                // 处理 Response
-                serverContext.getResponseBuilder().buildAndWrite(socketOut, response);
-            }else {
-                log.error("请求路径错误，未知的请求路径: {}", routePath);
-                serverContext.getResponseBuilder().failAndBuild(socketOut, new ServerSnapShotException(routePath,
-                        method.name(),
-                        StatusCode.NOT_FOUND));
-            }
-        } catch (IOException e) {
-            log.error("IO异常");
-        }catch(ServerSnapShotException e){
-            try {
-                server.getServerContext().getResponseBuilder().failAndBuild(socketOut, e);
-            } catch (IOException ignored) {}
-        }catch (RuntimeException e){
-            log.error("运行时异常,{}",e.getMessage());
-        }finally {
-            // Socket 资源清理
-            cleanUp(socketIn, socketOut, socket);
-        }
+        this.logic.apply(socketIn);
     }
 
     private void cleanUp(Closeable ... objects){
@@ -76,4 +25,13 @@ public class Worker implements Runnable{
             } catch (IOException ignored) {}
         }
     }
+
+    private Function<Socket, Void> logic;
+    private Socket socketIn;
+
+    public Worker(Socket socketIn ,Function<Socket, Void> logic){
+        this.socketIn = socketIn;
+        this.logic = logic;
+    }
+
 }
