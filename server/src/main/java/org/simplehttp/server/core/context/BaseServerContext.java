@@ -94,6 +94,10 @@ public class BaseServerContext implements Function<Socket, Void> {
         return this;
     }
 
+    // TODO 这里的请求处理逻辑分开，需要分为两步
+    //      - 解析请求
+    //      - 处理请求
+    // ToDo 这里尝试使用动态代理进行错误处理
     @Override
     public Void apply(Socket socket) {
         InputStream socketIn = null;
@@ -111,7 +115,7 @@ public class BaseServerContext implements Function<Socket, Void> {
             HttpResponse response = handler.handle(request);
             // 处理 Response
             responseBuilder.buildAndWrite(socketOut, response);
-        } catch (IOException e) {
+        }catch (IOException e) {
             log.error("IO异常");
             if(socketOut != null) {
                 try {
