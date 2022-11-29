@@ -4,6 +4,8 @@ import lombok.extern.log4j.Log4j2;
 import org.simplehttp.server.core.SimpleHttpServer;
 import org.simplehttp.common.enums.FixedHttpHeader;
 import org.simplehttp.common.enums.MIME;
+import org.simplehttp.server.core.context.AbstractComponent;
+import org.simplehttp.server.core.context.BaseServerContext;
 import org.simplehttp.server.enums.StatusCode;
 import org.simplehttp.server.enums.pojo.protocol.HttpResponse;
 import org.simplehttp.server.exception.ServerSnapShotException;
@@ -13,7 +15,10 @@ import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 
 @Log4j2
-public class HttpResponseBuilder {
+public class HttpResponseBuilder extends AbstractComponent {
+    public HttpResponseBuilder(BaseServerContext context){
+        super(context);
+    }
 
     // 构建请求并将请求写入到 Socket 中
     public void buildAndWrite(OutputStream outputStream, HttpResponse response) throws IOException{

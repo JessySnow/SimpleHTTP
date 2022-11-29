@@ -4,6 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.simplehttp.common.core.URLWrapper;
 import org.simplehttp.server.core.SimpleHttpServer;
+import org.simplehttp.server.core.context.BaseServerContext;
 import org.simplehttp.server.exception.ServerSnapShotException;
 
 import java.net.MalformedURLException;
@@ -14,6 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class URLParserTest {
     SimpleHttpServer simpleHttpServer = new SimpleHttpServer();
+    BaseServerContext context = new BaseServerContext();
     URL testUrl;
 
     @BeforeEach
@@ -22,6 +24,7 @@ class URLParserTest {
         this.simpleHttpServer.setContextPath("/api");
         this.simpleHttpServer.setPort(8090);
         testUrl = new URL("http://mail.google.com:80/context/index.jsp?mailid=10001&userid=1234");
+        context.bindServer(simpleHttpServer);
     }
 
     @Test
@@ -37,13 +40,13 @@ class URLParserTest {
 
     @Test
     public void testParseBadContext(){
-        assertThrows(ServerSnapShotException.class, () -> new URLParser().parse(simpleHttpServer, "http://127.0.0.1:8080/context/api?id=1"));
+        assertThrows(ServerSnapShotException.class, () -> new URLParser(context).parse( "http://127.0.0.1:8080/context/api?id=1"));
     }
 
     @Test
     public void testParseURL() throws ServerSnapShotException {
         simpleHttpServer.setContextPath("/context");
-        URLWrapper parse = new URLParser().parse(simpleHttpServer, "http://127.0.0.1:8080/context/api?id=1");
+        URLWrapper parse = new URLParser(context).parse( "http://127.0.0.1:8080/context/api?id=1");
         assertNotNull(parse);
     }
 

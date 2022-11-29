@@ -5,6 +5,7 @@ import org.simplehttp.common.core.URLWrapper;
 import org.simplehttp.common.enums.FixedHttpHeader;
 import org.simplehttp.common.enums.MIME;
 import org.simplehttp.common.enums.RequestMethod;
+import org.simplehttp.server.core.context.AbstractComponent;
 import org.simplehttp.server.core.context.BaseServerContext;
 import org.simplehttp.server.enums.StatusCode;
 import org.simplehttp.server.enums.pojo.protocol.HttpBody;
@@ -26,13 +27,17 @@ import java.util.Optional;
  * 解析 Socket 流
  */
 @Log4j2
-public class HttpRequestParser {
+public class HttpRequestParser extends AbstractComponent {
     private static final byte LF = '\n';
     private static final byte CR = '\r';
     private static final byte SPACE = ' ';
     private static final byte COLON = ':';
 
-    public HttpRequest parse(BaseServerContext context, InputStream inputStream) throws IOException, ServerSnapShotException {
+    public HttpRequestParser(BaseServerContext context){
+        super(context);
+    }
+
+    public HttpRequest parse(InputStream inputStream) throws IOException, ServerSnapShotException {
         HttpRequest request = new HttpRequest();
         HttpHeader header = new HttpHeader();
         HttpBody body = null;
@@ -72,7 +77,7 @@ public class HttpRequestParser {
         int port = context.getServer().getPort();
         queryPath = protocol + "://" + host + ":" + port + queryPath;
         // 构造一个完整的请求 URL，并进行包装
-        URLWrapper urlWrapper = context.getUrlParser().parse(context.server, queryPath);
+        URLWrapper urlWrapper = context.getUrlParser().parse(queryPath);
         request.setUrlWrapper(urlWrapper);
 
         // 请求方法处理，如果遇到不支持的请求方法，快速失败

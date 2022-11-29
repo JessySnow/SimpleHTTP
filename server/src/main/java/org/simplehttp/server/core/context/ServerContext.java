@@ -9,5 +9,4 @@ import org.simplehttp.server.core.session.impl.ContextUserSession;
 public class ServerContext extends BaseServerContext {
     private ContextUserSession userSession = new ContextUserSession();
 
-
 }

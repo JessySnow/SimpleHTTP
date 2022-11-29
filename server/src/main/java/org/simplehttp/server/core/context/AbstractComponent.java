@@ -7,11 +7,9 @@ import lombok.Data;
  */
 @Data
 abstract public class AbstractComponent {
-    private BaseServerContext context;
+    protected BaseServerContext context;
 
     public AbstractComponent(BaseServerContext context) {
         this.context = context;
     }
-
-    public AbstractComponent(){}
 }

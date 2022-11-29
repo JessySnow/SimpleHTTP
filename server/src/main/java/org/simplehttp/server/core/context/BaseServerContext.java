@@ -9,7 +9,6 @@ import org.simplehttp.server.core.parser.HttpResponseBuilder;
 import org.simplehttp.server.core.parser.URLParser;
 import org.simplehttp.server.core.route.CGIRouter;
 import org.simplehttp.server.core.route.Router;
-import org.simplehttp.server.core.session.Session;
 import org.simplehttp.server.enums.StatusCode;
 import org.simplehttp.server.enums.pojo.protocol.HttpRequest;
 import org.simplehttp.server.enums.pojo.protocol.HttpResponse;
@@ -43,25 +42,20 @@ public class BaseServerContext implements Function<Socket, Void> {
     @Getter
     protected HashMap<String, HttpHandler> postHttpHandlerMap = new HashMap<>();
 
-    // 只读 Map，在服务器启动时进行初始化，后续只会进行读操作从上下文拿 Session 实现功能，启动后不要向这个 SessionMap 中写内容
-    protected final HashMap<Class<? extends Session<?,?>>, Session<?,?>> sessionHashMap = new HashMap<>();
-
     // Http 请求解析器
-    protected HttpRequestParser requestParser = new HttpRequestParser();
+    protected HttpRequestParser requestParser = new HttpRequestParser(this);
     // Http 响应构造器
-    protected HttpResponseBuilder responseBuilder = new HttpResponseBuilder();
+    protected HttpResponseBuilder responseBuilder = new HttpResponseBuilder(this);
     // URL 解析器
     @Getter
-    protected URLParser urlParser = new URLParser();
+    protected URLParser urlParser = new URLParser(this);
     // CGI风格路径路由器
     protected Router router = new CGIRouter(this);
-
 
     // 绑定一个服务器
     public void bindServer(SimpleHttpServer server){
         this.server = server;
     }
-
 
     // 添加一个处理器
     public BaseServerContext addHandler(Class<? extends HttpHandler> clazz){
@@ -108,7 +102,7 @@ public class BaseServerContext implements Function<Socket, Void> {
         try {
             socketIn = socket.getInputStream();
             socketOut = socket.getOutputStream();
-            request = this.requestParser.parse(this, socketIn);
+            request = this.requestParser.parse(socketIn);
             routePath = request.getUrlWrapper().getUrl().getPath();
             method = request.getBody() == null ? RequestMethod.GET : RequestMethod.POST;
             HttpHandler handler = route(method, routePath);

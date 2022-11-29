@@ -39,7 +39,7 @@ class HttpRequestParserTest {
 
     @Test
     public void testParseGet() throws IOException, ServerSnapShotException {
-        HttpRequest request = new HttpRequestParser().parse(context, getHeaderStream);
+        HttpRequest request = new HttpRequestParser(context).parse(getHeaderStream);
     }
 
     /**
@@ -48,6 +48,6 @@ class HttpRequestParserTest {
      */
     @Test
     public void testParsePost() throws IOException, ServerSnapShotException {
-        HttpRequest request = new HttpRequestParser().parse(context, postHeaderStream_plain_text);
+        HttpRequest request = new HttpRequestParser(context).parse(postHeaderStream_plain_text);
     }
 }
