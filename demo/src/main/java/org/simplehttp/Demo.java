@@ -21,7 +21,7 @@ public class Demo {
                 .setContextPath("/test")
                 .bindContext(new BaseServerContext());
 
-        // 添加处理器处理器
+        // 添加处理器
         localhost.getServerContext()
                 .addHandler(EchoHandler.class)
                 .addHandler(PathParamHandler.class);

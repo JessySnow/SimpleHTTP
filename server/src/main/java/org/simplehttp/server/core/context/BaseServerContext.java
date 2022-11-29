@@ -151,9 +151,9 @@ public class BaseServerContext implements Function<Socket, Void> {
     public HttpHandler route(RequestMethod method, String routePath) throws ServerSnapShotException{
         HttpHandler handler = router.route(method, routePath);
         if(null == handler){
-            log.error("请求路径错误，未知的请求路径: {}", routePath);
             throw new ServerSnapShotException(routePath, method.name(), StatusCode.NOT_FOUND);
         }
         return handler;
     }
+
 }
