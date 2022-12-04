@@ -18,7 +18,6 @@ import org.simplehttp.server.handler.annonation.Handler;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 
@@ -89,77 +88,18 @@ public class BaseServerContext implements ContextInterface {
 
     @Override
     public HttpRequest parse(InputStream socketIn) throws IOException, ServerSnapShotException{
-//        try {
-            HttpRequest request = this.requestParser.parse(socketIn);
-            return request;
-//        }catch (IOException e) {
-//            log.error("IO异常");
-//            if(socketOut != null) {
-//                try {
-//                    responseBuilder.failAndBuild(socketOut, new ServerSnapShotException(e
-//                            , routePath, method.name(), StatusCode.INTERNAL_SERVER_ERROR));
-//                } catch (IOException ex) {
-//                    log.error("客户端IO异常，连接可能已被客户端提前关闭");
-//                }
-//            }
-//        }catch(ServerSnapShotException e){
-//            try {
-//                responseBuilder.failAndBuild(socketOut, e);
-//            } catch (IOException ignored) {
-//                log.error("客户端IO异常，连接可能已被客户端提前关闭");
-//            }
-//        }catch (RuntimeException e){
-//            log.error("运行时异常,{}",e.getMessage());
-//            try {
-//                responseBuilder.failAndBuild(socketOut, new ServerSnapShotException(e
-//                        , routePath, method.name(), StatusCode.INTERNAL_SERVER_ERROR));
-//            } catch (IOException ex) {
-//                throw new RuntimeException(ex);
-//            }
-//        }
+        return this.requestParser.parse(socketIn);
     }
 
     @Override
     public HttpResponse invoke(HttpRequest request) throws IOException, ServerSnapShotException{
-        OutputStream socketOut = null;
-//        try {
-            String routePath = request.getUrlWrapper().getUrl().getPath();
-            RequestMethod method = request.getBody() == null ? RequestMethod.GET : RequestMethod.POST;
-            HttpHandler handler = route(method, routePath);
-            HttpResponse response = handler.handle(request);
-            return response;
-            // 处理 Response
-//            responseBuilder.buildAndWrite(socketOut, response);
-//        }catch (IOException e) {
-//            log.error("IO异常");
-//            if(socketOut != null) {
-//                try {
-//                    responseBuilder.failAndBuild(socketOut, new ServerSnapShotException(e
-//                            , routePath, method.name(), StatusCode.INTERNAL_SERVER_ERROR));
-//                } catch (IOException ex) {
-//                    log.error("客户端IO异常，连接可能已被客户端提前关闭");
-//                }
-//            }
-//        }catch(ServerSnapShotException e){
-//            try {
-//                responseBuilder.failAndBuild(socketOut, e);
-//            } catch (IOException ignored) {
-//                log.error("客户端IO异常，连接可能已被客户端提前关闭");
-//            }
-//        }catch (RuntimeException e){
-//            log.error("运行时异常,{}",e.getMessage());
-//            try {
-//                responseBuilder.failAndBuild(socketOut, new ServerSnapShotException(e
-//                        , routePath, method.name(), StatusCode.INTERNAL_SERVER_ERROR));
-//            } catch (IOException ex) {
-//                throw new RuntimeException(ex);
-//            }
-//        }finally {
-            // Socket 资源清理
-//        }
+        String routePath = request.getUrlWrapper().getUrl().getPath();
+        RequestMethod method = request.getBody() == null ? RequestMethod.GET : RequestMethod.POST;
+        HttpHandler handler = route(method, routePath);
+        return handler.handle(request);
     }
 
-    public HttpHandler route(RequestMethod method, String routePath) throws ServerSnapShotException{
+    private HttpHandler route(RequestMethod method, String routePath) throws ServerSnapShotException{
         HttpHandler handler = router.route(method, routePath);
         if(null == handler){
             throw new ServerSnapShotException(routePath, method.name(), StatusCode.NOT_FOUND);
