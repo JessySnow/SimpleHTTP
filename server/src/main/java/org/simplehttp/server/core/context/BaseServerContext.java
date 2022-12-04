@@ -16,20 +16,17 @@ import org.simplehttp.server.exception.ServerSnapShotException;
 import org.simplehttp.server.handler.HttpHandler;
 import org.simplehttp.server.handler.annonation.Handler;
 
-import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
-import java.net.Socket;
 import java.util.HashMap;
-import java.util.function.Function;
 
 /**
  * 基础服务器上下文，提供 HTTP 服务器最核心的功能管理，通过继承这个类来拓展额外的功能
  */
 @Log4j2
-public class BaseServerContext implements Function<Socket, Void> {
+public class BaseServerContext implements ContextInterface {
 
     @Getter
     // 绑定的服务器实例引用
@@ -44,7 +41,9 @@ public class BaseServerContext implements Function<Socket, Void> {
 
     // Http 请求解析器
     protected HttpRequestParser requestParser = new HttpRequestParser(this);
+
     // Http 响应构造器
+    @Getter
     protected HttpResponseBuilder responseBuilder = new HttpResponseBuilder(this);
     // URL 解析器
     @Getter
@@ -88,64 +87,76 @@ public class BaseServerContext implements Function<Socket, Void> {
         return this;
     }
 
-    // TODO 这里的请求处理逻辑分开，需要分为两步
-    //      - 解析请求
-    //      - 处理请求
-    // ToDo 这里尝试使用动态代理进行错误处理
     @Override
-    public Void apply(Socket socket) {
-        InputStream socketIn = null;
-        OutputStream socketOut = null;
-        HttpRequest request = null;
-        String routePath = null;
-        RequestMethod method = null;
-        try {
-            socketIn = socket.getInputStream();
-            socketOut = socket.getOutputStream();
-            request = this.requestParser.parse(socketIn);
-            routePath = request.getUrlWrapper().getUrl().getPath();
-            method = request.getBody() == null ? RequestMethod.GET : RequestMethod.POST;
-            HttpHandler handler = route(method, routePath);
-            HttpResponse response = handler.handle(request);
-            // 处理 Response
-            responseBuilder.buildAndWrite(socketOut, response);
-        }catch (IOException e) {
-            log.error("IO异常");
-            if(socketOut != null) {
-                try {
-                    responseBuilder.failAndBuild(socketOut, new ServerSnapShotException(e
-                            , routePath, method.name(), StatusCode.INTERNAL_SERVER_ERROR));
-                } catch (IOException ex) {
-                    log.error("客户端IO异常，连接可能已被客户端提前关闭");
-                }
-            }
-        }catch(ServerSnapShotException e){
-            try {
-                responseBuilder.failAndBuild(socketOut, e);
-            } catch (IOException ignored) {
-                log.error("客户端IO异常，连接可能已被客户端提前关闭");
-            }
-        }catch (RuntimeException e){
-            log.error("运行时异常,{}",e.getMessage());
-            try {
-                responseBuilder.failAndBuild(socketOut, new ServerSnapShotException(e
-                        , routePath, method.name(), StatusCode.INTERNAL_SERVER_ERROR));
-            } catch (IOException ex) {
-                throw new RuntimeException(ex);
-            }
-        }finally {
-            // Socket 资源清理
-            cleanUp(socketIn, socketOut, socket);
-        }
-        return null;
+    public HttpRequest parse(InputStream socketIn) throws IOException, ServerSnapShotException{
+//        try {
+            HttpRequest request = this.requestParser.parse(socketIn);
+            return request;
+//        }catch (IOException e) {
+//            log.error("IO异常");
+//            if(socketOut != null) {
+//                try {
+//                    responseBuilder.failAndBuild(socketOut, new ServerSnapShotException(e
+//                            , routePath, method.name(), StatusCode.INTERNAL_SERVER_ERROR));
+//                } catch (IOException ex) {
+//                    log.error("客户端IO异常，连接可能已被客户端提前关闭");
+//                }
+//            }
+//        }catch(ServerSnapShotException e){
+//            try {
+//                responseBuilder.failAndBuild(socketOut, e);
+//            } catch (IOException ignored) {
+//                log.error("客户端IO异常，连接可能已被客户端提前关闭");
+//            }
+//        }catch (RuntimeException e){
+//            log.error("运行时异常,{}",e.getMessage());
+//            try {
+//                responseBuilder.failAndBuild(socketOut, new ServerSnapShotException(e
+//                        , routePath, method.name(), StatusCode.INTERNAL_SERVER_ERROR));
+//            } catch (IOException ex) {
+//                throw new RuntimeException(ex);
+//            }
+//        }
     }
 
-    private void cleanUp(Closeable... objects){
-        for (Closeable o : objects){
-            try {
-                o.close();
-            } catch (IOException ignored) {}
-        }
+    @Override
+    public HttpResponse invoke(HttpRequest request) throws IOException, ServerSnapShotException{
+        OutputStream socketOut = null;
+//        try {
+            String routePath = request.getUrlWrapper().getUrl().getPath();
+            RequestMethod method = request.getBody() == null ? RequestMethod.GET : RequestMethod.POST;
+            HttpHandler handler = route(method, routePath);
+            HttpResponse response = handler.handle(request);
+            return response;
+            // 处理 Response
+//            responseBuilder.buildAndWrite(socketOut, response);
+//        }catch (IOException e) {
+//            log.error("IO异常");
+//            if(socketOut != null) {
+//                try {
+//                    responseBuilder.failAndBuild(socketOut, new ServerSnapShotException(e
+//                            , routePath, method.name(), StatusCode.INTERNAL_SERVER_ERROR));
+//                } catch (IOException ex) {
+//                    log.error("客户端IO异常，连接可能已被客户端提前关闭");
+//                }
+//            }
+//        }catch(ServerSnapShotException e){
+//            try {
+//                responseBuilder.failAndBuild(socketOut, e);
+//            } catch (IOException ignored) {
+//                log.error("客户端IO异常，连接可能已被客户端提前关闭");
+//            }
+//        }catch (RuntimeException e){
+//            log.error("运行时异常,{}",e.getMessage());
+//            try {
+//                responseBuilder.failAndBuild(socketOut, new ServerSnapShotException(e
+//                        , routePath, method.name(), StatusCode.INTERNAL_SERVER_ERROR));
+//            } catch (IOException ex) {
+//                throw new RuntimeException(ex);
+//            }
+//        }finally {
+            // Socket 资源清理
+//        }
     }
 
     public HttpHandler route(RequestMethod method, String routePath) throws ServerSnapShotException{
@@ -155,5 +166,4 @@ public class BaseServerContext implements Function<Socket, Void> {
         }
         return handler;
     }
-
 }
