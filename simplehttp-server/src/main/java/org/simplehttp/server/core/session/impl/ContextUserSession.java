@@ -8,8 +8,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * Server Context 可选组件，提供 用户 Session 支持
- * TODO Session 每一个实例使用不同的过期时间
+ * 提供 用户 Session 支持
  */
 public class ContextUserSession implements UserSession{
     /**

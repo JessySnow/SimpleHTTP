@@ -3,10 +3,9 @@ package org.simplehttp.server.core.context;
 import org.simplehttp.server.core.session.impl.ContextUserSession;
 
 /**
- * 支持状态管理的上下文，这个上下文支持了 HttpSession
- * Session 容器选择使用并发map
+ * 支持 Http Session 的服务器上下文
+ * 目前仅支持基于 Cookie 的 Session
  */
 public class ServerContext extends BaseServerContext {
     private ContextUserSession userSession = new ContextUserSession();
-
 }

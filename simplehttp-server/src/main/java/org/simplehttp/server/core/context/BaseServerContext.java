@@ -22,7 +22,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 
 /**
- * 基础服务器上下文，提供 HTTP 服务器最核心的功能管理，通过继承这个类来拓展额外的功能
+ * 基础服务器上下文，提供 HTTP 服务器最核心的功能和组件，通过继承这个类来拓展额外的功能
  */
 @Log4j2
 public class BaseServerContext implements ContextInterface {
