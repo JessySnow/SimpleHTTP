@@ -63,13 +63,13 @@ public class BaseServerContext implements ContextInterface {
             String path = server.getContextPath() + annotation.routePath();
             if (annotation.method().equals(RequestMethod.GET)){
                 if(null != getHttpHandlerMap.get(path)){
-                    log.error("处理器存在路径冲突，请检查:{}, {}", getHttpHandlerMap.get(path).getClass().getName(),
+                    log.error("处理器存在路径冲突，请检查: {}, {}", getHttpHandlerMap.get(path).getClass().getName(),
                             clazz.getName());
                 }
                 getHttpHandlerMap.put(path, httpHandler);
             } else if (annotation.method().equals(RequestMethod.POST)){
                 if(null != postHttpHandlerMap.get(path)){
-                    log.error("处理器存在路径冲突，请检查:{}, {}", postHttpHandlerMap.get(path).getClass().getName(),
+                    log.error("处理器存在路径冲突，请检查: {}, {}", postHttpHandlerMap.get(path).getClass().getName(),
                             clazz.getName());
                 }
                 postHttpHandlerMap.put(path, httpHandler);
@@ -77,11 +77,11 @@ public class BaseServerContext implements ContextInterface {
                 throw new IllegalArgumentException("不支持的请求方法");
             }
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
-            log.error("实例化处理器失败{}",clazz.getName());
+            log.error("实例化处理器失败: {}",clazz.getName());
         }catch (IllegalArgumentException e){
             log.error("暂不支持对应请求方法的处理器: {}",clazz.getName());
         }catch (NullPointerException e){
-            log.error("实例化处理器失败，请检查处理器注解{}", clazz.getName());
+            log.error("实例化处理器失败，请检查处理器注解: {}", clazz.getName());
         }
         return this;
     }
