@@ -11,9 +11,9 @@
 
     <modules>
         <module>simplehttp-server</module>
-        <module>client</module>
+        <module>simplehttp-client</module>
         <module>simplehttp-common</module>
-        <module>demo</module>
+        <module>simplehttp-demo</module>
     </modules>
 
     <properties>
