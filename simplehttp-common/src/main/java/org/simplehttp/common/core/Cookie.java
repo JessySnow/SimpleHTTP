@@ -13,7 +13,7 @@ import java.util.UUID;
  */
 public class Cookie {
 
-    public static final long YEAR_SEC = (long)((long)365 * (long) )
+    public static final long YEAR_SEC =((long)365 * (long)86400 * (long)1000);
 
     // UUID
     public final String uuid;
@@ -47,7 +47,7 @@ public class Cookie {
      */
     public Cookie(String key, String value, String path){
         this();
-        this.path = encode(path);
+        this.path = encodePath(path);
         this.key = encode(key);
         this.value = encode(value);
         this.expiration = new Date(System.currentTimeMillis() + 3600000);
@@ -59,20 +59,23 @@ public class Cookie {
      * 如果过期时间被设置为一个负值，这个 Cookie 会被当作一个不会过期的 Cookie(365天的有效期)
      * @param value Cookie 值
      * @param path 有效路径
-     * @param second 生效时间，以秒为单位
+     * @param second 过期时间，以秒为单位
      * @param key Cookie 键
      */
     public Cookie(String key, String value, String path, int second){
         this();
         // 永久生效的 Cookie
         if (second < 0){
-            this.expiration = new Date(System.currentTimeMillis() + 365 * )
-        }else {
-            this.key = encode(key);
-            this.value = encode(value);
-            this.path = encode(path);
+            this.expiration = new Date(System.currentTimeMillis() + YEAR_SEC);
+        }else if(second > 0){
             this.expiration = new Date(System.currentTimeMillis() + second * 1000L);
+        }else{
+            this.expiration = null;
         }
+
+        this.key = encode(key);
+        this.value = encode(value);
+        this.path = encodePath(path);
     }
 
     /**
@@ -89,7 +92,7 @@ public class Cookie {
     }
 
     public void setPath(String path) {
-        this.path = encode(path);
+        this.path = encodePath(path);
     }
 
     public void setValue(String value) {
@@ -98,5 +101,20 @@ public class Cookie {
 
     private static String encode(String param){
         return URLEncoder.encode(param, StandardCharsets.UTF_8);
+    }
+    private static String encodePath(String path){
+        String[] paths = path.split("/");
+        for(int i = 0; i < paths.length; ++ i){
+            paths[i] = URLEncoder.encode(paths[i], StandardCharsets.UTF_8);
+        }
+
+        StringBuilder sb = new StringBuilder();
+        for(String s : paths){
+            if(!s.isEmpty()){
+                sb.append("/").append(s);
+            }
+        }
+
+        return sb.toString();
     }
 }

@@ -3,6 +3,7 @@ package org.simplehttp.server.enums.pojo.protocol;
 import lombok.Getter;
 import org.simplehttp.common.core.Cookie;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -16,6 +17,12 @@ import java.util.Date;
 public class HttpResponse {
     private HttpHeader header;
     private HttpBody body;
+    private static final SimpleDateFormat dateFormat;
+
+    static {
+        String format = "E, d M y HH:mm:ss z";
+        dateFormat = new SimpleDateFormat(format);
+    }
 
     public HttpResponse(){
         this.header = new HttpHeader();
@@ -31,8 +38,15 @@ public class HttpResponse {
         String cookieVal = cookie.getValue();
         String cookiePath = cookie.getPath();
         Date expiration = cookie.getExpiration();
-        String key2val = cookieKey + "=" + cookieVal + ";";
-        String path = cookiePath == null ? "" : "Path=" + cookiePath + ";";
-//        String expires = expiration == null ?
+
+        String key2val = cookieKey + "=" + cookieVal + "; ";
+        String path = cookiePath == null ? " " : "Path=" + cookiePath + "; ";
+        String expires = expiration == null ? "" : "Expires=" + dateFormat.format(expiration);
+
+        header.addHeaderPair(headerKey, key2val + path + expires);
+    }
+
+    public static void main(String[] args) {
+        new HttpResponse().setCookie(new Cookie("sessionId","12345","/echo",3600));
     }
 }
