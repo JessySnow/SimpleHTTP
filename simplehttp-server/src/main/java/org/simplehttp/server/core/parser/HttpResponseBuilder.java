@@ -48,9 +48,13 @@ public class HttpResponseBuilder extends AbstractComponent {
                 // 属性行
                 FixedHttpHeader.SERVER.key + ":" + server + "\r\n" +
                 FixedHttpHeader.CONTENT_TYPE.key + ":" + contentType + "\r\n";
+        // Cookie 行
+        head += FixedHttpHeader.SET_COOKIE.key + ":" + response.getHeader()
+                .getHeaderValue(FixedHttpHeader.SET_COOKIE.key) + "\r\n";
 
+
+        // 响应体
         String body;
-        // 处理响应体
         switch (acceptableType){
             // 文本类型
             case TEXT_HTML, TEXT_PLAIN -> {
@@ -65,12 +69,7 @@ public class HttpResponseBuilder extends AbstractComponent {
     // 响应失败的请求
     public void failAndBuild(OutputStream outputStream, ServerSnapShotException exception) throws IOException {
         StatusCode code = exception.getCode();
-        String url = exception.getUrl();
-        String requestMethod = exception.getRequestMethod();
-        log.error("请求处理失败\n\t请求URL/PATH: {}\n\t请求方法: {}\n\t响应: {}, {}", url,
-                                                                                        requestMethod,
-                                                                                        code.getCode(),
-                                                                                        code.getStatus());
+
         String res = "HTTP/1.0 " + code.getCode() + " " + code.getStatus() + " \r\n"
                 + "Server: SimpleHttp\r\n"
                 + "Content_Type: text/html\r\n\n"

@@ -2,6 +2,7 @@ package org.simplehttp.server.enums.pojo.protocol;
 
 import lombok.Getter;
 import org.simplehttp.common.core.Cookie;
+import org.simplehttp.common.enums.FixedHttpHeader;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -33,20 +34,16 @@ public class HttpResponse {
      * 给当前的响应头增加一个设置 Cookie 的请求
      */
     public void setCookie(Cookie cookie){
-        String headerKey = "Set-Cookie";
+        String headerKey = FixedHttpHeader.SET_COOKIE.key;
         String cookieKey = cookie.getKey();
         String cookieVal = cookie.getValue();
         String cookiePath = cookie.getPath();
         Date expiration = cookie.getExpiration();
 
         String key2val = cookieKey + "=" + cookieVal + "; ";
-        String path = cookiePath == null ? " " : "Path=" + cookiePath + "; ";
+        String path = cookiePath == null ? "Path=/; " : "Path=" + cookiePath + "; ";
         String expires = expiration == null ? "" : "Expires=" + dateFormat.format(expiration);
 
         header.addHeaderPair(headerKey, key2val + path + expires);
-    }
-
-    public static void main(String[] args) {
-        new HttpResponse().setCookie(new Cookie("sessionId","12345","/echo",3600));
     }
 }

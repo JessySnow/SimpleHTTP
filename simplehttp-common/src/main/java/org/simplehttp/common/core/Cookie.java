@@ -103,6 +103,7 @@ public class Cookie {
         return URLEncoder.encode(param, StandardCharsets.UTF_8);
     }
     private static String encodePath(String path){
+        if(path == null) return path;
         String[] paths = path.split("/");
         for(int i = 0; i < paths.length; ++ i){
             paths[i] = URLEncoder.encode(paths[i], StandardCharsets.UTF_8);

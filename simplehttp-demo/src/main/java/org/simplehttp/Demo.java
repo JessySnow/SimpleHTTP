@@ -1,9 +1,10 @@
 package org.simplehttp;
 
-import org.simplehttp.server.core.SimpleHttpServer;
-import org.simplehttp.server.core.context.BaseServerContext;
+import org.simplehttp.handler.impl.CookieTestHandler;
 import org.simplehttp.handler.impl.EchoHandler;
 import org.simplehttp.handler.impl.PathParamHandler;
+import org.simplehttp.server.core.SimpleHttpServer;
+import org.simplehttp.server.core.context.BaseServerContext;
 
 /**
  * 简单的静态服务器示例
@@ -24,7 +25,9 @@ public class Demo {
         // 添加处理器
         localhost.getServerContext()
                 .addHandler(EchoHandler.class)
-                .addHandler(PathParamHandler.class);
+                .addHandler(PathParamHandler.class)
+                .addHandler(CookieTestHandler.class);
+
 
         // 启动服务器
         localhost.start();

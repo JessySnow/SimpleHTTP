@@ -51,14 +51,17 @@ public class Worker implements Runnable{
                 }
             }
         }catch (ServerSnapShotException e){
-            log.error(e);
+            log.error("请求处理失败\n\t请求URL/PATH: {}\n\t请求方法: {}\n\t响应: {}, {}", e.getUrl(),
+                    e.getRequestMethod(),
+                    e.getCode().getCode(),
+                    e.getCode().getStatus());
             try {
                 this.context.getResponseBuilder().failAndBuild(socketOutStream, e);
             } catch (IOException ex) {
                 log.error("客户端IO异常，连接可能已被客户端提前关闭");
             }
         }catch (Exception e){
-            log.error("未知的 IO 异常");
+            log.error(e);
         }finally {
             try {
                 if(socketInStream != null) {
