@@ -8,9 +8,9 @@ import org.simplehttp.common.enums.RequestMethod;
 import org.simplehttp.server.core.context.AbstractComponent;
 import org.simplehttp.server.core.context.BaseServerContext;
 import org.simplehttp.server.enums.StatusCode;
-import org.simplehttp.server.enums.pojo.protocol.HttpBody;
-import org.simplehttp.server.enums.pojo.protocol.HttpHeader;
-import org.simplehttp.server.enums.pojo.protocol.HttpRequest;
+import org.simplehttp.server.pojo.protocol.HttpBody;
+import org.simplehttp.server.pojo.protocol.HttpHeader;
+import org.simplehttp.server.pojo.protocol.HttpRequest;
 import org.simplehttp.server.exception.ServerSnapShotException;
 
 import java.io.BufferedReader;

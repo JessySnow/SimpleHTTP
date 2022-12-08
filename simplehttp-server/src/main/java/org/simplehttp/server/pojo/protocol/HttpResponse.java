@@ -1,4 +1,4 @@
-package org.simplehttp.server.enums.pojo.protocol;
+package org.simplehttp.server.pojo.protocol;
 
 import lombok.Getter;
 import org.simplehttp.common.core.Cookie;

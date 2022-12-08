@@ -5,7 +5,6 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 import lombok.extern.log4j.Log4j2;
 import org.simplehttp.server.core.context.BaseServerContext;
-import org.simplehttp.server.core.context.ServerContext;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -57,7 +56,6 @@ public class SimpleHttpServer {
 
     /**
      * 绑定的上下文，绑定之前需要自己到上下文中注册一下自己需要的组件
-     * @see ServerContext
      */
     @Getter
     private BaseServerContext serverContext;

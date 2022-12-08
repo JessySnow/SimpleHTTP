@@ -7,7 +7,7 @@ import org.simplehttp.common.enums.MIME;
 import org.simplehttp.server.core.context.AbstractComponent;
 import org.simplehttp.server.core.context.BaseServerContext;
 import org.simplehttp.server.enums.StatusCode;
-import org.simplehttp.server.enums.pojo.protocol.HttpResponse;
+import org.simplehttp.server.pojo.protocol.HttpResponse;
 import org.simplehttp.server.exception.ServerSnapShotException;
 
 import java.io.IOException;

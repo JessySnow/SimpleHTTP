@@ -1,7 +1,7 @@
 package org.simplehttp.server.handler;
 
-import org.simplehttp.server.enums.pojo.protocol.HttpRequest;
-import org.simplehttp.server.enums.pojo.protocol.HttpResponse;
+import org.simplehttp.server.pojo.protocol.HttpRequest;
+import org.simplehttp.server.pojo.protocol.HttpResponse;
 
 import java.util.function.Function;
 

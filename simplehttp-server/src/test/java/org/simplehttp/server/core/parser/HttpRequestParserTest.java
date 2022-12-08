@@ -3,22 +3,22 @@ package org.simplehttp.server.core.parser;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.simplehttp.server.core.SimpleHttpServer;
-import org.simplehttp.server.core.context.ServerContext;
-import org.simplehttp.server.enums.pojo.protocol.HttpRequest;
+import org.simplehttp.server.core.context.BaseServerContext;
+import org.simplehttp.server.pojo.protocol.HttpRequest;
 import org.simplehttp.server.exception.ServerSnapShotException;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
 class HttpRequestParserTest {
-    private ServerContext context;
+    private BaseServerContext context;
     private ByteArrayInputStream getHeaderStream;
     private ByteArrayInputStream postHeaderStream_plain_text;
 
 
     @BeforeEach
     public void setUp(){
-        this.context = new ServerContext();
+        this.context = new BaseServerContext();
         context.server = new SimpleHttpServer().bindContext(context)
                 .setPort(9090)
                 .setContextPath("/api")

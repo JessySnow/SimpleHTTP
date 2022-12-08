@@ -3,8 +3,8 @@ package org.simplehttp.server.core;
 import lombok.extern.log4j.Log4j2;
 import org.simplehttp.server.core.context.BaseServerContext;
 import org.simplehttp.server.enums.StatusCode;
-import org.simplehttp.server.enums.pojo.protocol.HttpRequest;
-import org.simplehttp.server.enums.pojo.protocol.HttpResponse;
+import org.simplehttp.server.pojo.protocol.HttpRequest;
+import org.simplehttp.server.pojo.protocol.HttpResponse;
 import org.simplehttp.server.exception.ServerSnapShotException;
 
 import java.io.IOException;
