@@ -59,7 +59,7 @@ public class Worker implements Runnable{
             try {
                 this.context.getResponseBuilder().failAndBuild(socketOutStream, e);
             } catch (IOException ex) {
-                log.error("客户端IO异常，连接可能已被客户端提前关闭\n",e.toString());
+                log.error("客户端IO异常，连接可能已被客户端提前关闭\n");
             }
         }catch (Exception e){
             log.error(e);
