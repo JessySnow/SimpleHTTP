@@ -39,7 +39,7 @@ public class Worker implements Runnable{
             this.context.getResponseBuilder().buildAndWrite(socketOutStream,processedResponse);
 
         }catch (IOException e){
-            log.error("IO 异常");
+            log.error("IO 异常\n", e);
             if(socketOutStream != null){
                 try {
                     String routePath = request == null ? "UNKNOWN" : request.getUrlWrapper().getUrl().getPath();
@@ -47,18 +47,19 @@ public class Worker implements Runnable{
                     this.context.getResponseBuilder().failAndBuild(socketOutStream,
                             new ServerSnapShotException(e, routePath, method, StatusCode.INTERNAL_SERVER_ERROR));
                 } catch (IOException ex) {
-                    log.error("客户端IO异常，连接可能已被客户端提前关闭");
+                    log.error("客户端IO异常，连接可能已被客户端提前关闭\n", e);
                 }
             }
         }catch (ServerSnapShotException e){
-            log.error("请求处理失败\n\t请求URL/PATH: {}\n\t请求方法: {}\n\t响应: {}, {}", e.getUrl(),
+            log.error("请求处理失败\n\t请求URL/PATH: {}\n\t请求方法: {}\n\t响应: {}, {}\n{}", e.getUrl(),
                     e.getRequestMethod(),
                     e.getCode().getCode(),
-                    e.getCode().getStatus());
+                    e.getCode().getStatus()
+                    ,e);
             try {
                 this.context.getResponseBuilder().failAndBuild(socketOutStream, e);
             } catch (IOException ex) {
-                log.error("客户端IO异常，连接可能已被客户端提前关闭");
+                log.error("客户端IO异常，连接可能已被客户端提前关闭\n",e.toString());
             }
         }catch (Exception e){
             log.error(e);

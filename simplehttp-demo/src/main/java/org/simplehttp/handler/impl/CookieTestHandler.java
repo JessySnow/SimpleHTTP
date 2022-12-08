@@ -23,7 +23,7 @@ public class CookieTestHandler extends HttpHandler {
         header.setStatusCode(StatusCode.OK);
         // 必填，表示当前返回的媒体类型
         header.setContentType(MIME.TEXT_HTML);
-        response.setCookie(this.context, new Cookie("sessionId","12345", "/cookie", -1));
+        response.setCookie(this.context, new Cookie("sessionId","12345"));
 
         // 选填，向客户端返回的消息内容，如果没有可以不填
         // 返回实体部分的 POJO 由两个部分组成，媒体类型和实际的内容

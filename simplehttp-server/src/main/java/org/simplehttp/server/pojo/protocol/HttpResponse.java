@@ -43,9 +43,9 @@ public class HttpResponse {
 
         String key2val = cookieKey + "=" + cookieVal + "; ";
         String path = cookiePath == null ?
-                "Path=" + serverContext.getServer().getContextPath()
+                "Path=" + serverContext.getServer().getContextPath() + "; "
                 : "Path=" + cookiePath + "; ";
-        String expires = expiration == null ? "" : "Expires=" + dateFormat.format(expiration);
+        String expires = expiration == null ? "" : "Expires=" + expiration + "; ";
 
         header.addHeaderPair(headerKey, key2val + path + expires);
     }
