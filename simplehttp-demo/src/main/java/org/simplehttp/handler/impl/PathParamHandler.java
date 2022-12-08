@@ -14,7 +14,7 @@ import org.simplehttp.server.pojo.protocol.HttpResponse;
  * 路径参数处理器示例
  */
 @Handler(method = RequestMethod.GET, routePath = "/param_test")
-public class PathParamHandler implements HttpHandler {
+public class PathParamHandler extends HttpHandler {
     @Override
     public HttpResponse handle(HttpRequest request) {
         String userName = request.getUrlWrapper().getQueryValue("userName");

@@ -12,7 +12,7 @@ import org.simplehttp.server.handler.HttpHandler;
 import org.simplehttp.server.handler.annonation.Handler;
 
 @Handler(method = RequestMethod.GET, routePath = "/cookie")
-public class CookieTestHandler implements HttpHandler {
+public class CookieTestHandler extends HttpHandler {
     @Override
     public HttpResponse handle(HttpRequest request) {
         HttpResponse response = new HttpResponse();

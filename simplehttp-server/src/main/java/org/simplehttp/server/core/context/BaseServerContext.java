@@ -23,9 +23,12 @@ import java.util.HashMap;
 
 /**
  * 基础服务器上下文，提供 HTTP 服务器最核心的功能和组件，通过继承这个类来拓展额外的功能
+ * parse: 请求解析
+ * invoke: 根据路由结果，调用处理器
+ * response: 相应请求，这里选择直接返回
  */
 @Log4j2
-public class BaseServerContext implements ContextInterface {
+public class BaseServerContext {
 
     @Getter
     // 绑定的服务器实例引用
@@ -86,17 +89,22 @@ public class BaseServerContext implements ContextInterface {
         return this;
     }
 
-    @Override
+    // 解析请求
     public HttpRequest parse(InputStream socketIn) throws IOException, ServerSnapShotException{
         return this.requestParser.parse(socketIn);
     }
 
-    @Override
+    // 根据这个上下文的路由规则调用相应的处理器
     public HttpResponse invoke(HttpRequest request) throws IOException, ServerSnapShotException{
         String routePath = request.getUrlWrapper().getUrl().getPath();
         RequestMethod method = request.getBody() == null ? RequestMethod.GET : RequestMethod.POST;
         HttpHandler handler = route(method, routePath);
         return handler.handle(request);
+    }
+
+    // 返回请求的相应，这里选择直接返回
+    public HttpResponse response(HttpResponse response){
+        return response;
     }
 
     private HttpHandler route(RequestMethod method, String routePath) throws ServerSnapShotException{

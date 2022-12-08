@@ -14,7 +14,7 @@ import org.simplehttp.server.pojo.protocol.HttpResponse;
  * Handler 示例
  */
 @Handler(method = RequestMethod.GET, routePath = "/echo")
-public class EchoHandler implements HttpHandler {
+public class EchoHandler extends HttpHandler {
     @Override
     public HttpResponse handle(HttpRequest request) {
         HttpResponse response = new HttpResponse();
