@@ -3,6 +3,7 @@ package org.simplehttp.server.pojo.protocol;
 import lombok.Getter;
 import org.simplehttp.common.core.Cookie;
 import org.simplehttp.common.enums.FixedHttpHeader;
+import org.simplehttp.server.core.context.BaseServerContext;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -33,7 +34,7 @@ public class HttpResponse {
     /**
      * 给当前的响应头增加一个设置 Cookie 的请求
      */
-    public void setCookie(Cookie cookie){
+    public void setCookie(BaseServerContext serverContext, Cookie cookie){
         String headerKey = FixedHttpHeader.SET_COOKIE.key;
         String cookieKey = cookie.getKey();
         String cookieVal = cookie.getValue();
@@ -41,7 +42,9 @@ public class HttpResponse {
         Date expiration = cookie.getExpiration();
 
         String key2val = cookieKey + "=" + cookieVal + "; ";
-        String path = cookiePath == null ? "Path=/; " : "Path=" + cookiePath + "; ";
+        String path = cookiePath == null ?
+                "Path=" + serverContext.getServer().getContextPath()
+                : "Path=" + cookiePath + "; ";
         String expires = expiration == null ? "" : "Expires=" + dateFormat.format(expiration);
 
         header.addHeaderPair(headerKey, key2val + path + expires);
