@@ -12,4 +12,7 @@ abstract public class AbstractComponent {
     public AbstractComponent(BaseServerContext context) {
         this.context = context;
     }
+    public AbstractComponent(){
+        this.context = null;
+    }
 }

@@ -69,12 +69,14 @@ public class BaseServerContext {
                     log.error("处理器存在路径冲突，请检查: {}, {}", getHttpHandlerMap.get(path).getClass().getName(),
                             clazz.getName());
                 }
+                httpHandler.setContext(this);
                 getHttpHandlerMap.put(path, httpHandler);
             } else if (annotation.method().equals(RequestMethod.POST)){
                 if(null != postHttpHandlerMap.get(path)){
                     log.error("处理器存在路径冲突，请检查: {}, {}", postHttpHandlerMap.get(path).getClass().getName(),
                             clazz.getName());
                 }
+                httpHandler.setContext(this);
                 postHttpHandlerMap.put(path, httpHandler);
             }else {
                 throw new IllegalArgumentException("不支持的请求方法");
