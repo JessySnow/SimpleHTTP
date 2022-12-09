@@ -9,6 +9,7 @@ import org.simplehttp.server.core.parser.HttpResponseBuilder;
 import org.simplehttp.server.core.parser.URLParser;
 import org.simplehttp.server.core.route.CGIRouter;
 import org.simplehttp.server.core.route.Router;
+import org.simplehttp.server.core.session.Session;
 import org.simplehttp.server.enums.StatusCode;
 import org.simplehttp.server.pojo.protocol.HttpRequest;
 import org.simplehttp.server.pojo.protocol.HttpResponse;
@@ -20,6 +21,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
+import java.util.Objects;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * 基础服务器上下文，提供 HTTP 服务器最核心的功能和组件，通过继承这个类来拓展额外的功能
@@ -115,5 +118,27 @@ public class BaseServerContext {
             throw new ServerSnapShotException(routePath, method.name(), StatusCode.NOT_FOUND);
         }
         return handler;
+    }
+
+    /**
+     * String - Object 基于 Map 键值对的 Session 实现
+     */
+    private class BaseSession implements Session<String, Objects>{
+        private ConcurrentHashMap<String, Objects> container = new ConcurrentHashMap<>();
+
+        @Override
+        public void add(String k, Objects v) {
+            this.container.put(k, v);
+        }
+
+        @Override
+        public void del(String k, Objects v) {
+            this.container.remove(k, v);
+        }
+
+        @Override
+        public Objects get(String k) {
+            return this.container.get(k);
+        }
     }
 }

@@ -4,12 +4,12 @@ import org.simplehttp.common.core.Cookie;
 import org.simplehttp.common.enums.MIME;
 import org.simplehttp.common.enums.RequestMethod;
 import org.simplehttp.server.enums.StatusCode;
+import org.simplehttp.server.handler.HttpHandler;
+import org.simplehttp.server.handler.annonation.Handler;
 import org.simplehttp.server.pojo.protocol.HttpBody;
 import org.simplehttp.server.pojo.protocol.HttpHeader;
 import org.simplehttp.server.pojo.protocol.HttpRequest;
 import org.simplehttp.server.pojo.protocol.HttpResponse;
-import org.simplehttp.server.handler.HttpHandler;
-import org.simplehttp.server.handler.annonation.Handler;
 
 @Handler(method = RequestMethod.GET, routePath = "/cookie")
 public class CookieTestHandler extends HttpHandler {
@@ -23,8 +23,9 @@ public class CookieTestHandler extends HttpHandler {
         header.setStatusCode(StatusCode.OK);
         // 必填，表示当前返回的媒体类型
         header.setContentType(MIME.TEXT_HTML);
-        response.setCookie(this.context, new Cookie("sessionId","12345"));
-
+//        response.setCookie(this.context, new Cookie("sessionId","12345"));
+        response.setCookie(this.context, new Cookie("userName","jessySnow",this.context.getServer().
+                getContextPath() + "/cookie"));
         // 选填，向客户端返回的消息内容，如果没有可以不填
         // 返回实体部分的 POJO 由两个部分组成，媒体类型和实际的内容
         // 这里我返回 HTML 类型
