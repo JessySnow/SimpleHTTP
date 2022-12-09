@@ -11,17 +11,16 @@ import org.simplehttp.server.core.route.CGIRouter;
 import org.simplehttp.server.core.route.Router;
 import org.simplehttp.server.core.session.Session;
 import org.simplehttp.server.enums.StatusCode;
-import org.simplehttp.server.pojo.protocol.HttpRequest;
-import org.simplehttp.server.pojo.protocol.HttpResponse;
 import org.simplehttp.server.exception.ServerSnapShotException;
 import org.simplehttp.server.handler.HttpHandler;
 import org.simplehttp.server.handler.annonation.Handler;
+import org.simplehttp.server.pojo.protocol.HttpRequest;
+import org.simplehttp.server.pojo.protocol.HttpResponse;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
-import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -55,6 +54,28 @@ public class BaseServerContext {
     protected URLParser urlParser = new URLParser(this);
     // CGI风格路径路由器
     protected Router router = new CGIRouter(this);
+    // 默认的 Session 实现
+    protected Session<String, Object> baseSession = new BaseSession();
+
+    public boolean removeFromSession(String key, Object value){
+        return this.baseSession.del(key, value);
+    }
+
+    public Object removeFromSession(String key){
+        return this.baseSession.del(key);
+    }
+
+    public Object getFromSession(String key){
+        return this.baseSession.get(key);
+    }
+
+    public boolean isInSession(String key){
+        return this.baseSession.contains(key);
+    }
+
+    public Object putToSession(String key, Object value){
+        return this.baseSession.add(key, value);
+    }
 
     // 绑定一个服务器
     public void bindServer(SimpleHttpServer server){
@@ -123,22 +144,32 @@ public class BaseServerContext {
     /**
      * String - Object 基于 Map 键值对的 Session 实现
      */
-    private class BaseSession implements Session<String, Objects>{
-        private ConcurrentHashMap<String, Objects> container = new ConcurrentHashMap<>();
+    private class BaseSession implements Session<String, Object>{
+        private final ConcurrentHashMap<String, Object> container = new ConcurrentHashMap<>();
 
         @Override
-        public void add(String k, Objects v) {
-            this.container.put(k, v);
+        public boolean contains(String k) {
+            return this.container.containsKey(k);
         }
 
         @Override
-        public void del(String k, Objects v) {
-            this.container.remove(k, v);
+        public Object add(String k, Object v) {
+            return container.put(k, v);
         }
 
         @Override
-        public Objects get(String k) {
-            return this.container.get(k);
+        public boolean del(String k, Object v) {
+            return container.remove(k, v);
+        }
+
+        @Override
+        public Object del(String k) {
+            return container.remove(k);
+        }
+
+        @Override
+        public Object get(String k) {
+            return container.get(k);
         }
     }
 }

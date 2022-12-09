@@ -3,6 +3,7 @@ package org.simplehttp;
 import org.simplehttp.handler.impl.CookieTestHandler;
 import org.simplehttp.handler.impl.EchoHandler;
 import org.simplehttp.handler.impl.PathParamHandler;
+import org.simplehttp.handler.impl.SessionHandler;
 import org.simplehttp.server.core.SimpleHttpServer;
 import org.simplehttp.server.core.context.BaseServerContext;
 
@@ -26,7 +27,8 @@ public class Demo {
         localhost.getServerContext()
                 .addHandler(EchoHandler.class)
                 .addHandler(PathParamHandler.class)
-                .addHandler(CookieTestHandler.class);
+                .addHandler(CookieTestHandler.class)
+                .addHandler(SessionHandler.class);
 
 
         // 启动服务器
